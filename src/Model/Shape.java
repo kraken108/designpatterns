@@ -1,6 +1,6 @@
 package Model;
 
-abstract public class Shape implements Cloneable{
+abstract public class Shape {
     private int x;
     private int y;
     private int width;

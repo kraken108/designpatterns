@@ -1,10 +1,11 @@
 package Model;
 
+import javafx.collections.ObservableList;
+
 import java.util.ArrayList;
 
 public class World {
     private ArrayList<Command> commands;
-
     public World(){
         commands = new ArrayList<>();
     }
