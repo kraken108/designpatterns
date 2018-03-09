@@ -1,10 +1,7 @@
 package Model.Application;
 
-import Model.Command;
-import Model.FileHandler.Document;
-import Model.FileHandler.DrawDocument;
+import Model.Commands.Command;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 abstract public class Application {

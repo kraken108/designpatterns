@@ -1,7 +1,8 @@
 package Model.FileHandler;
 
-import Model.*;
 import Model.Application.Application;
+import Model.Commands.Command;
+import Model.Commands.DrawCommand;
 import Model.Shapes.Circle;
 import Model.Shapes.Shape;
 import Model.Shapes.Square;
