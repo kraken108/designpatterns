@@ -2,26 +2,28 @@ package Model;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Observable;
 
-abstract public class Command implements Cloneable{
+abstract public class Command extends Observable implements Cloneable{
 
-    private static LinkedList<Command> commandHistory = new LinkedList<>();
+    private LinkedList<Command> commandHistory = new LinkedList<>();
 
-    private static LinkedList<Command> undoneCommandHistory = new LinkedList<>();
+    private LinkedList<Command> undoneCommandHistory = new LinkedList<>();
 
-    public static LinkedList<Command> getUndoneCommandHistory() {
+    public LinkedList<Command> getUndoneCommandHistory() {
         return undoneCommandHistory;
     }
 
-    public static LinkedList<Command> getCommandHistory() {
+    public LinkedList<Command> getCommandHistory() {
         return commandHistory;
     }
 
-    private static void addCommand(Command c){
+    public void addCommand(Command c){
         commandHistory.add(0,c);
+        notifyObservers();
     }
 
-    private static void undoCommand(){
+    public void undoCommand(){
         try {
             undoneCommandHistory.add((Command) commandHistory.getFirst().clone());
         } catch (CloneNotSupportedException e) {
