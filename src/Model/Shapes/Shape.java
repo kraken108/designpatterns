@@ -1,13 +1,13 @@
 package Model.Shapes;
 
-abstract public class Shape implements Cloneable{
-    private int x;
-    private int y;
+abstract public class Shape {
+    private double x;
+    private double y;
     private int width;
     private int height;
     private boolean isFilled;
 
-    public Shape(int x, int y, int width, int height, boolean isFilled){
+    public Shape(double x, double y, int width, int height, boolean isFilled){
         this.setX(x);
         this.setY(y);
         this.setWidth(width);
@@ -30,19 +30,19 @@ abstract public class Shape implements Cloneable{
     }
 
 
-    public int getX() {
+    public double getX() {
         return x;
     }
 
-    public void setX(int x) {
+    public void setX(double x) {
         this.x = x;
     }
 
-    public int getY() {
+    public double getY() {
         return y;
     }
 
-    public void setY(int y) {
+    public void setY(double y) {
         this.y = y;
     }
 

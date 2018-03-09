@@ -1,5 +1,8 @@
 package Controller;
 
+import Model.Circle;
+import Model.Command;
+import Model.DrawCommand;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -20,7 +23,9 @@ import java.io.IOException;
 
 public class Main extends Application {
 
-
+    private final static int SHAPES = 0;
+    private final static int COLORS = 1;
+    private final static int SIZES = 2;
     private final static int SCREEN_HEIGHT = 768;
     private final static int SCREEN_WIDTH = 1024;
     private Parent root;
@@ -68,16 +73,16 @@ public class Main extends Application {
                                                     fillBox = (CheckBox) node;
                                                 } else if (node.getId().equals("shapes")) {
                                                     String[] strings = {"Square", "Circle", "Triangle"};
-                                                    initializeChoices((BorderPane) nod, shapeChoices, "shapes", strings);
+                                                    initializeChoices((BorderPane) nod, SHAPES, "shapes", strings);
                                                 }
                                             } catch (NullPointerException e) {}
                                         }
                                     }else if(nod.getId().equals("colorSection")){
                                         String[] strings = {"White","Black","Red","Green","Blue","Yellow"};
-                                        initializeChoices((BorderPane) nod,colorChoices,"colors",strings);
+                                        initializeChoices((BorderPane) nod,COLORS,"colors",strings);
                                     }else if(nod.getId().equals("sizeSection")){
                                         String[] strings = {"1","2","4","8","16","32","64"};
-                                        initializeChoices((BorderPane) nod,sizeChoices,"sizes",strings);
+                                        initializeChoices((BorderPane) nod,SIZES,"sizes",strings);
                                     }
                                 }
                             }
@@ -103,21 +108,34 @@ public class Main extends Application {
         gc.setLineWidth(5);
         canvas.setOnMousePressed((MouseEvent event)->{
             gc.strokeRoundRect(event.getX(),event.getY(),2,2,5,5);
+            Command.addCommand(new DrawCommand(new Circle(event.getX(),event.getY(),2,2,true)));
         });
         canvas.setOnMouseDragged((MouseEvent event)->{
             gc.strokeRoundRect(event.getX(),event.getY(),2,2,5,5);
-            gc.stroke();
         });
     }
 
-    private void initializeChoices(BorderPane node, ChoiceBox choiceBox, String target, String[] strings){
+    private void initializeChoices(BorderPane node, int whichChoiceBox, String target, String[] strings){
         System.out.println(target);
         for(Node n:node.getChildren()) {
             try {
                 if (n.getId().equals(target)) {
-                    choiceBox = (ChoiceBox) n;
-                    choiceBox.getItems().addAll(strings);
-                    choiceBox.getSelectionModel().select(0);
+                    switch(whichChoiceBox){
+                        case 0:
+                            shapeChoices = (ChoiceBox) n;
+                            shapeChoices.getItems().addAll(strings);
+                            shapeChoices.getSelectionModel().select(0);
+                            break;
+                        case 1:
+                            colorChoices = (ChoiceBox) n;
+                            colorChoices.getItems().addAll(strings);
+                            colorChoices.getSelectionModel().select(0);
+                            break;
+                        case 2:
+                            sizeChoices = (ChoiceBox) n;
+                            sizeChoices.getItems().addAll(strings);
+                            sizeChoices.getSelectionModel().select(0);
+                            break;                    }
                 }
             }catch(NullPointerException e){
 
