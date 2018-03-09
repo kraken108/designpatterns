@@ -13,4 +13,9 @@ public class DrawCommand extends Command {
     public Shape getShape(){
         return shape;
     }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return new DrawCommand(this.shape);
+    }
 }
