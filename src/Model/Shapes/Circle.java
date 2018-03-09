@@ -1,6 +1,6 @@
-package Model;
+package Model.Shapes;
 
-public class Circle extends Shape{
+public class Circle extends Shape {
 
     @Override
     protected Circle clone() throws CloneNotSupportedException {

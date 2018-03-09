@@ -1,7 +1,6 @@
-package Model;
+package Model.Shapes;
 
-public class Square extends Shape{
-
+public class Square extends Shape {
 
     @Override
     protected Square clone() throws CloneNotSupportedException {

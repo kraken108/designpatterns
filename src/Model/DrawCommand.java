@@ -1,5 +1,7 @@
 package Model;
 
+import Model.Shapes.Shape;
+
 public class DrawCommand extends Command {
     private Shape shape;
 

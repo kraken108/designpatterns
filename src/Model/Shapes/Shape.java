@@ -1,6 +1,11 @@
-package Model;
+package Model.Shapes;
 
-abstract public class Shape implements Cloneable{
+/******************************/
+/** COMPOSITE DESIGN PATTERN **/
+/******************************/
+
+
+public abstract class Shape implements Cloneable{
     private int x;
     private int y;
     private int width;
