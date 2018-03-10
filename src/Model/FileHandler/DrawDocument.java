@@ -2,6 +2,7 @@ package Model.FileHandler;
 
 import Model.*;
 import Model.Application.Application;
+import Model.Application.DrawApplication;
 import Model.Shapes.Circle;
 import Model.Shapes.Shape;
 import Model.Shapes.Square;
@@ -48,7 +49,7 @@ public class DrawDocument extends Document {
         PrintWriter writer = null;
         try {
             writer = new PrintWriter(name);
-            for(Command c : world.getCommands()){
+            for(Command c : world.getCommands().getCommandHistory()){
                 if(c instanceof DrawCommand){
                     Shape s = ((DrawCommand) c).getShape();
                     StringBuilder sb = new StringBuilder();

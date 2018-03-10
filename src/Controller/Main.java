@@ -1,8 +1,10 @@
 package Controller;
 
-import Model.Circle;
+import Model.Application.DrawApplication;
 import Model.Command;
 import Model.DrawCommand;
+import Model.Shapes.Circle;
+import Model.Shapes.Shape;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -20,8 +22,11 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.Observable;
+import java.util.Observer;
 
-public class Main extends Application {
+public class Main extends Application implements Observer {
 
     private final static int SHAPES = 0;
     private final static int COLORS = 1;
@@ -37,6 +42,25 @@ public class Main extends Application {
     private ChoiceBox colorChoices;
     private ChoiceBox sizeChoices;
     private HBox hbox;
+    private DrawApplication application;
+
+
+    public void draw(Shape s){
+        gc.strokeOval(s.getX(),s.getY(),s.getHeight(),s.getWidth());
+    }
+
+    @Override
+    public void update(Observable observable, Object o) {
+        LinkedList<Command> commands = ((LinkedList<Command>) o);
+        Canvas c = canvas;
+        gc.clearRect(0, 0, c.getWidth(), c.getHeight());
+        for (int i = 0; i < commands.size(); i++) {
+            System.out.println(commands.get(i).toString());
+            if(commands.get(i) instanceof DrawCommand){
+                draw(((DrawCommand) commands.get(i)).getShape());
+            }
+        }
+    }
 
     public static void main(String[] args) {
         launch(args);
@@ -46,6 +70,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         getJavaFxElementReferences();
         initializeStage(primaryStage);
+        application = new DrawApplication(this);
     }
 
     private void getJavaFxElementReferences(){
@@ -107,11 +132,10 @@ public class Main extends Application {
         gc.setStroke(Color.BLACK);
         gc.setLineWidth(5);
         canvas.setOnMousePressed((MouseEvent event)->{
-            gc.strokeRoundRect(event.getX(),event.getY(),2,2,5,5);
-            Command.addCommand(new DrawCommand(new Circle(event.getX(),event.getY(),2,2,true)));
+            application.addCommand(new DrawCommand(new Circle(event.getX(),event.getY(),2,2,true)));
         });
         canvas.setOnMouseDragged((MouseEvent event)->{
-            gc.strokeRoundRect(event.getX(),event.getY(),2,2,5,5);
+            application.addCommand(new DrawCommand(new Circle(event.getX(),event.getY(),2,2,true)));
         });
     }
 

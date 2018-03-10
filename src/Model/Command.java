@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Observable;
 
-abstract public class Command extends Observable implements Cloneable{
+public class Command extends Observable implements Cloneable{
 
     private LinkedList<Command> commandHistory = new LinkedList<>();
 
@@ -20,7 +20,11 @@ abstract public class Command extends Observable implements Cloneable{
 
     public void addCommand(Command c){
         commandHistory.add(0,c);
-        notifyObservers();
+        for(Command cmd : commandHistory){
+
+        }
+        setChanged();
+        notifyObservers(commandHistory);
     }
 
     public void undoCommand(){
