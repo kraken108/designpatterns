@@ -6,12 +6,23 @@ abstract public class Shape {
     private int width;
     private int height;
     private boolean isFilled;
+    private String rgbColorCode;
 
-    public Shape(double x, double y, int width, int height, boolean isFilled){
+    public Shape(double x, double y, int width, int height, boolean isFilled,String rgbColorCode){
         this.setX(x);
         this.setY(y);
         this.setWidth(width);
         this.setHeight(height);
+        this.setRgbColorCode(rgbColorCode);
+
+    }
+
+    public String getRgbColorCode() {
+        return rgbColorCode;
+    }
+
+    public void setRgbColorCode(String rgbColorCode) {
+        this.rgbColorCode = rgbColorCode;
     }
 
     public void setIsFilled(boolean isFilled){
@@ -27,6 +38,7 @@ abstract public class Shape {
         this.setY(0);
         this.setWidth(0);
         this.setHeight(0);
+        this.setRgbColorCode("0");
     }
 
 

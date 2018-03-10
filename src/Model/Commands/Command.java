@@ -1,6 +1,5 @@
-package Model;
+package Model.Commands;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Observable;
 

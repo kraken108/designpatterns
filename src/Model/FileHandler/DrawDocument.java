@@ -1,10 +1,11 @@
 package Model.FileHandler;
 
-import Model.*;
 import Model.Application.Application;
-import Model.Application.DrawApplication;
+import Model.Commands.Command;
+import Model.Commands.DrawCommand;
 import Model.Shapes.Circle;
 import Model.Shapes.Shape;
+import Model.Shapes.ShapeFactory;
 import Model.Shapes.Square;
 
 import java.io.FileNotFoundException;
@@ -17,24 +18,17 @@ public class DrawDocument extends Document {
     void loadDocument(ArrayList<String> rows, Application world) {
         for(String s : rows){
             String[] strings = s.split(" ");
-            if(strings.length >= 5){
+            if(strings.length >= 6){
                 int x = Integer.parseInt(strings[0]);
                 int y = Integer.parseInt(strings[1]);
                 int width = Integer.parseInt(strings[2]);
                 int height = Integer.parseInt(strings[3]);
                 boolean isFilled = Boolean.parseBoolean(strings[4]);
                 String type = strings[5];
+                String color = strings[6];
+
                 type = type.toUpperCase();
-                Shape shape = null;
-                switch(type){
-                    case "SQUARE":
-                        shape = new Square(x,y,width,height,isFilled);
-                        break;
-                    case "CIRCLE":
-                        shape = new Circle(x,y,width,height,isFilled);
-                        break;
-                    default: break;
-                }
+                Shape shape = new ShapeFactory().createShape(type,x,y,width,height,isFilled,color);
                 if(shape != null){
                     world.addCommand(new DrawCommand(shape));
                 }
@@ -49,11 +43,12 @@ public class DrawDocument extends Document {
         PrintWriter writer = null;
         try {
             writer = new PrintWriter(name);
-            for(Command c : world.getCommands().getCommandHistory()){
+            for(Command c : world.getCommands()){
                 if(c instanceof DrawCommand){
                     Shape s = ((DrawCommand) c).getShape();
                     StringBuilder sb = new StringBuilder();
-                    sb.append(s.getX() + " " + s.getY() + " " + s.getWidth() + " " + s.getHeight() + " " + s.getIsFilled() + " " + s.getClass());
+                    sb.append(s.getX() + " " + s.getY() + " " + s.getWidth() + " " + s.getHeight()
+                            + " " + s.getIsFilled() + " " + s.getClass() + " " + s.getRgbColorCode());
                     writer.println(sb.toString());
                 }
             }
