@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Menu?>
@@ -14,8 +15,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<?import javafx.collections.FXCollections?>
-<?import java.lang.String?>
 <VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
   <children>
     <MenuBar VBox.vgrow="NEVER">
@@ -61,32 +60,54 @@
          <top>
             <HBox id="hbox" alignment="TOP_CENTER" prefHeight="58.0" prefWidth="640.0" style="-fx-background-color: #AFAFAF;" BorderPane.alignment="CENTER">
                <children>
-                  <BorderPane prefHeight="200.0" prefWidth="200.0" id="shapeSection">
+                  <BorderPane id="shapeSection" prefHeight="200.0" prefWidth="200.0">
                      <top>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Shape   " BorderPane.alignment="CENTER" />
                      </top>
                      <center>
-                        <ChoiceBox prefWidth="150.0" BorderPane.alignment="CENTER" id="shapes"/>
+                        <ChoiceBox id="shapes" prefWidth="150.0" BorderPane.alignment="CENTER" />
                      </center>
                      <right>
-                        <CheckBox mnemonicParsing="false" text="Fill" BorderPane.alignment="CENTER" id="fillBox"/>
+                        <CheckBox id="fillBox" mnemonicParsing="false" text="Fill" BorderPane.alignment="CENTER" />
                      </right>
                   </BorderPane>
-                  <BorderPane prefHeight="200.0" prefWidth="200.0" id="colorSection">
+                  <BorderPane id="colorSection" prefHeight="200.0" prefWidth="200.0">
                      <top>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Color" BorderPane.alignment="CENTER" />
                      </top>
                      <center>
-                        <ChoiceBox prefWidth="150.0" BorderPane.alignment="CENTER" id="colors"/>
+                        <ChoiceBox id="colors" prefWidth="150.0" BorderPane.alignment="CENTER" />
                      </center>
                   </BorderPane>
-                  <BorderPane prefHeight="200.0" prefWidth="200.0" id="sizeSection">
+                  <BorderPane id="sizeSection" prefHeight="200.0" prefWidth="200.0">
                      <top>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Size" BorderPane.alignment="CENTER" />
                      </top>
                      <center>
-                        <ChoiceBox prefWidth="150.0" BorderPane.alignment="CENTER" id="sizes"/>
+                        <ChoiceBox id="sizes" prefWidth="150.0" BorderPane.alignment="CENTER" />
                      </center>
+                  </BorderPane>
+                  <BorderPane id="buttonSection" prefHeight="200.0" prefWidth="200.0">
+                     <left>
+                        <Button id="undo" mnemonicParsing="false" text="Undo" BorderPane.alignment="CENTER" />
+                     </left>
+                     <center>
+                        <Button id="redo" mnemonicParsing="false" text="Redo" BorderPane.alignment="CENTER" />
+                     </center>
+                     <top>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Undo/redo" BorderPane.alignment="CENTER" />
+                     </top>
+                  </BorderPane>
+                  <BorderPane prefHeight="200.0" prefWidth="200.0" id="toolSection">
+                     <left>
+                        <Button mnemonicParsing="false" text="Brush" BorderPane.alignment="CENTER" id="brush"/>
+                     </left>
+                     <center>
+                        <Button mnemonicParsing="false" text="Changer" BorderPane.alignment="CENTER" id="changer"/>
+                     </center>
+                     <top>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Tool" BorderPane.alignment="CENTER" />
+                     </top>
                   </BorderPane>
                </children>
                <opaqueInsets>

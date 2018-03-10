@@ -21,6 +21,14 @@ abstract public class Application {
         }
     }
 
+    public void undoCommand(){
+        commands.undoCommand();
+    }
+
+    public void redoCommand(){
+        commands.redoCommand();
+    }
+
     public abstract void saveWorld(String fileName);
 
    public abstract void openWorld(String fileName);

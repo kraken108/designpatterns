@@ -5,20 +5,20 @@ import java.util.Observable;
 
 public class Command extends Observable implements Cloneable{
 
-    private LinkedList<Command> commandHistory = new LinkedList<>();
+    private static LinkedList<Command> commandHistory = new LinkedList<>();
 
-    private LinkedList<Command> undoneCommandHistory = new LinkedList<>();
+    private static LinkedList<Command> undoneCommandHistory = new LinkedList<>();
 
-    public LinkedList<Command> getUndoneCommandHistory() {
+    public static LinkedList<Command> getUndoneCommandHistory() {
         return undoneCommandHistory;
     }
 
-    public LinkedList<Command> getCommandHistory() {
+    public static LinkedList<Command> getCommandHistory() {
         return commandHistory;
     }
 
-    public void addCommand(Command c){
-        commandHistory.add(0,c);
+    final public void addCommand(Command c){
+        commandHistory.addFirst(c);
         for(Command cmd : commandHistory){
 
         }
@@ -26,12 +26,21 @@ public class Command extends Observable implements Cloneable{
         notifyObservers(commandHistory);
     }
 
-    public void undoCommand(){
+    final public void undoCommand(){
         try {
-            undoneCommandHistory.add((Command) commandHistory.getFirst().clone());
+            undoneCommandHistory.addFirst((Command) commandHistory.getFirst().clone());
         } catch (CloneNotSupportedException e) {
             System.out.println("This action can't be redone.");
         }
         commandHistory.removeFirst();
+        setChanged();
+        notifyObservers(commandHistory);
     }
+
+    final public void redoCommand(){
+        addCommand(undoneCommandHistory.pop());
+        setChanged();
+        notifyObservers(commandHistory);
+    }
+
 }
