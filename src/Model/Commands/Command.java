@@ -18,6 +18,11 @@ public class Command extends Observable implements Cloneable{
         return commandHistory;
     }
 
+    final public void clearCommands(){
+        commandHistory.clear();
+        undoneCommandHistory.clear();
+    }
+
     final public void addCommand(Command c){
         commandHistory.addFirst(c);
         for(Command cmd : commandHistory){

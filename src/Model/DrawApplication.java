@@ -1,24 +1,34 @@
 package Model;
 
-import Model.Commands.DrawCommand;
+
+import Model.Commands.CommandFactory;
 import Model.FileHandler.Document;
 import Model.FileHandler.DrawDocument;
-import Model.Shapes.Shape;
 import Model.Shapes.ShapeFactory;
 import javafx.scene.paint.Color;
 
 import java.io.FileNotFoundException;
+import java.util.List;
+import java.util.Map;
 import java.util.Observer;
 
 public class DrawApplication extends Application {
 
-    public DrawApplication(Observer o) {
-        super.commands.addObserver(o);
+    public String[] getAvailableShapes(){
+        return new ShapeFactory().getShapes();
     }
 
-    public void addDrawCommand(String shapeName, double x, double y, int width, int height, boolean isFilled,String color){
-        Shape s = new ShapeFactory().createShape(shapeName,x,y,width,height,isFilled,color);
-        super.addCommand(new DrawCommand(s));
+    public DrawApplication(){
+    }
+
+
+    @Override
+    public void addCommand(String command, Map params) {
+        super.addCommand(new CommandFactory().createCommand(command,params));
+    }
+
+    public DrawApplication(Observer o) {
+        super.commands.addObserver(o);
     }
 
     @Override
