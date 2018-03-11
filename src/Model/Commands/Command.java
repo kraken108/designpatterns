@@ -1,6 +1,7 @@
 package Model.Application.Commands;
 
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 import java.util.Observable;
 
 public class Command extends Observable implements Cloneable{
@@ -34,7 +35,7 @@ public class Command extends Observable implements Cloneable{
     final public void undoCommand(){
         try {
             undoneCommandHistory.addFirst((Command) commandHistory.getFirst().clone());
-        } catch (CloneNotSupportedException e) {
+        } catch (NoSuchElementException |CloneNotSupportedException e) {
             System.out.println("This action can't be redone.");
         }
         commandHistory.removeFirst();

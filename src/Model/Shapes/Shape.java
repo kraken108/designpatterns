@@ -14,7 +14,7 @@ abstract public class Shape {
         this.setWidth(width);
         this.setHeight(height);
         this.setRgbColorCode(rgbColorCode);
-
+        this.isFilled = isFilled;
     }
 
     public String getRgbColorCode() {
@@ -39,6 +39,7 @@ abstract public class Shape {
         this.setWidth(0);
         this.setHeight(0);
         this.setRgbColorCode("0");
+        this.isFilled = false;
     }
 
 

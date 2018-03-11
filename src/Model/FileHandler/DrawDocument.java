@@ -1,10 +1,10 @@
-package Model.Application.FileHandler;
+package Model.FileHandler;
 
-import Model.Application.Application;
-import Model.Application.Commands.Command;
-import Model.Application.Commands.DrawCommand;
-import Model.Application.Shapes.Shape;
-import Model.Application.Shapes.ShapeFactory;
+import Model.Application;
+import Model.Commands.Command;
+import Model.Commands.DrawCommand;
+import Model.Shapes.Shape;
+import Model.Shapes.ShapeFactory;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -26,14 +26,13 @@ public class DrawDocument extends Document {
                     String type = strings[5];
                     String color = strings[6];
 
-                    type = type.toUpperCase();
-                    Shape shape = new ShapeFactory().createShape(type,x,y,width,height,isFilled,color);
-                    if(shape != null){
-                        world.addCommand(new DrawCommand(shape));
-                    }
-                }else{
-                    System.out.println("Failed to read read row, less than 5 elements");
+                type = type.toUpperCase();
+                Shape shape = new ShapeFactory().createShape(type,x,y,width,height,isFilled,color);
+                if(shape != null){
+                    world.addCommand(new DrawCommand(shape));
                 }
+            }else{
+                System.out.println("Failed to read read row, less than 5 elements");
             }
         }catch(Exception e){
             e.printStackTrace();

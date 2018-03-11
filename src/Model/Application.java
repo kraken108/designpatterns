@@ -1,7 +1,6 @@
-package Model.Application;
+package Model;
 
-import Model.Application.Commands.Command;
-import Model.Application.Commands.DrawCommand;
+import Model.Commands.Command;
 
 import java.util.List;
 import java.util.Map;

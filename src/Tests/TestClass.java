@@ -1,13 +1,12 @@
 package Tests;
 
-import Model.Application.Application;
-import Model.Application.DrawApplication;
 import Model.Application.Shapes.ShapeFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import Model.Shapes.ShapeFactory;
 
 public class TestClass {
 

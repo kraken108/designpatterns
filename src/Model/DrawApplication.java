@@ -1,4 +1,4 @@
-package Model.Application;
+package Model;
 
 import Model.Application.Commands.CommandFactory;
 import Model.Application.Commands.DrawCommand;
