@@ -1,4 +1,4 @@
-package View;
+package Tests;
 
 import Model.*;
 import Model.Shapes.Shape;

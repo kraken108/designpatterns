@@ -10,6 +10,9 @@ import java.io.FileNotFoundException;
 
 public class DrawApplication extends Application {
 
+    public String[] getAvailableShapes(){
+        return new ShapeFactory().getShapes();
+    }
 
     public void addDrawCommand(String shapeName, double x, double y, int width, int height, boolean isFilled,String color){
         Shape s = new ShapeFactory().createShape(shapeName,x,y,width,height,isFilled,color);
