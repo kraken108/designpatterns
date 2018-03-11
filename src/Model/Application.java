@@ -39,7 +39,7 @@ abstract public class Application {
                         + ((DrawCommand) c).getShape().getX() + " "
                         + ((DrawCommand) c).getShape().getY() + " "
                         + ((DrawCommand) c).getShape().getIsFilled() + " "
-                        + ((DrawCommand) c).getShape().getRgbColorCode();
+                        + ((DrawCommand) c).getShape().getColor();
             }
         }
         return s;

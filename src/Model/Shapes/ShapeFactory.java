@@ -54,4 +54,9 @@ public class ShapeFactory {
                 return null;
         }
     }
+
+    public static String[] getShapes(){
+        String[] strs = {"Circle","Square"};
+        return strs;
+    }
 }

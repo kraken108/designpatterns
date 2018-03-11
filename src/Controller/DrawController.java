@@ -2,6 +2,7 @@ package Controller;
 
 import Model.Application;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,7 +11,11 @@ public class DrawController {
 
 
     public void draw(Map map,GraphicsContext gc) {
+
         try {
+            gc.setStroke(Color.valueOf((String)map.get("COLOR")));
+            gc.setFill(Color.valueOf((String)map.get("COLOR")));
+
             String name = (String) map.get("NAME");
             name = name.toUpperCase();
             switch (name) {

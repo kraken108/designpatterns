@@ -1,9 +1,6 @@
 package Controller;
 
 import Model.DrawApplication;
-import Model.Commands.Command;
-import Model.Commands.DrawCommand;
-import Model.Shapes.*;
 
 
 
@@ -56,7 +53,6 @@ public class Main extends Application implements Observer {
 
     @Override
     public void update(Observable observable, Object o) {
-        LinkedList<Command> commands = ((LinkedList<Command>) o);
         Canvas c = canvas;
         gc.clearRect(0, 0, c.getWidth(), c.getHeight());
 

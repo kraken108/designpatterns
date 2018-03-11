@@ -33,7 +33,7 @@ public class DrawApplication extends Application {
                 map.put("WIDTH",s.getWidth());
                 map.put("HEIGHT",s.getHeight());
                 map.put("FILLED",s.getIsFilled());
-                map.put("COLOR",s.getRgbColorCode());
+                map.put("COLOR",s.getColor());
                 shapes.add(map);
             }
         }
