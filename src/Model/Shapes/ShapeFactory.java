@@ -1,22 +1,14 @@
 package Model.Shapes;
 
 public class ShapeFactory {
-
-    public Shape createShape(String name, double x, double y, int width, int height, boolean isFilled,String color) {
-        name = name.toUpperCase();
+    public static Shape createShape(String name, double x, double y, int width, int height, boolean isFilled,String color) {
         switch (name) {
-            case "CIRCLE":
+            case "Circle":
                 return new Circle(x, y, width, height, isFilled,color);
-            case "SQUARE":
+            case "Square":
                 return new Square(x, y, width, height, isFilled,color);
             default:
                 return null;
         }
     }
-
-    public String[] getShapes(){
-        String[] shapes = {"CIRCLE","SQUARE"};
-        return shapes;
-    }
-
 }
