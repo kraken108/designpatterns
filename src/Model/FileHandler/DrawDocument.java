@@ -5,6 +5,7 @@ import Model.Commands.Command;
 import Model.Commands.DrawCommand;
 import Model.Shapes.Shape;
 import Model.Shapes.ShapeFactory;
+import javafx.scene.paint.Color;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -26,7 +27,7 @@ public class DrawDocument extends Document {
                 String color = strings[6];
 
                 type = type.toUpperCase();
-                Shape shape = new ShapeFactory().createShape(type,x,y,width,height,isFilled,color);
+                Shape shape = new ShapeFactory().createShape(type,x,y,width,height,isFilled, color);
                 if(shape != null){
                     world.addCommand(new DrawCommand(shape));
                 }
@@ -46,7 +47,7 @@ public class DrawDocument extends Document {
                     Shape s = ((DrawCommand) c).getShape();
                     StringBuilder sb = new StringBuilder();
                     sb.append(s.getX() + " " + s.getY() + " " + s.getWidth() + " " + s.getHeight()
-                            + " " + s.getIsFilled() + " " + s.getClass() + " " + s.getRgbColorCode());
+                            + " " + s.getIsFilled() + " " + s.getClass() + " " + s.getColor());
                     writer.println(sb.toString());
                 }
             }

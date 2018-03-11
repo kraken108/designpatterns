@@ -1,5 +1,7 @@
 package Model.Shapes;
 
+import javafx.scene.paint.Color;
+
 public class ShapeFactory {
     public static Shape createShape(String name, double x, double y, int width, int height, boolean isFilled,String color) {
         switch (name) {

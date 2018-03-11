@@ -5,15 +5,13 @@ import Model.FileHandler.Document;
 import Model.FileHandler.DrawDocument;
 import Model.Shapes.Shape;
 import Model.Shapes.ShapeFactory;
+import javafx.scene.paint.Color;
 
 import java.io.FileNotFoundException;
 import java.util.Observer;
 
 public class DrawApplication extends Application {
 
-    public String[] getAvailableShapes(){
-        return new ShapeFactory().getShapes();
-    }
     public DrawApplication(Observer o) {
         super.commands.addObserver(o);
     }

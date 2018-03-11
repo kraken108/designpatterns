@@ -3,10 +3,7 @@ package Controller;
 import Model.DrawApplication;
 import Model.Commands.Command;
 import Model.Commands.DrawCommand;
-import Model.Shapes.Circle;
-import Model.Shapes.Shape;
-import Model.Shapes.ShapeFactory;
-import Model.Shapes.Square;
+import Model.Shapes.*;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -53,6 +50,8 @@ public class Main extends Application implements Observer {
     private Button changer;
 
     public void draw(Shape s){
+        gc.setStroke(Color.valueOf(s.getColor()));
+        gc.setFill(Color.valueOf(s.getColor()));
         if(s instanceof Square){
             if(s.getIsFilled()){
                 gc.fillRect(s.getX(),s.getY(),s.getHeight(),s.getWidth());
@@ -80,6 +79,7 @@ public class Main extends Application implements Observer {
     }
 
     public static void main(String[] args) {
+        System.out.println("clr:" +Color.BLACK.toString());
         launch(args);
     }
 
@@ -118,8 +118,7 @@ public class Main extends Application implements Observer {
                                             } catch (NullPointerException e) {}
                                         }
                                     }else if(nod.getId().equals("colorSection")){
-                                        String[] strings = {"White","Black","Red","Green","Blue","Yellow"};
-                                        initializeChoices((BorderPane) nod,COLORS,"colors",strings);
+                                        initializeChoices((BorderPane) nod,COLORS,"colors", ShapeColor.getNames(ShapeColor.class));
                                     }else if(nod.getId().equals("sizeSection")){
                                         String[] strings = {"1","2","4","8","16","32","64"};
                                         initializeChoices((BorderPane) nod,SIZES,"sizes",strings);
@@ -249,7 +248,7 @@ public class Main extends Application implements Observer {
                  );
     }
 
-    private void initializeChoices(BorderPane node, int whichChoiceBox, String target, String[] strings){
+    private void initializeChoices(BorderPane node, int whichChoiceBox, String target, Object[] strings){
         System.out.println(target);
         for(Node n:node.getChildren()) {
             try {
