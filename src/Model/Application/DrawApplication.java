@@ -11,6 +11,9 @@ import java.util.Observer;
 
 public class DrawApplication extends Application {
 
+    public String[] getAvailableShapes(){
+        return new ShapeFactory().getShapes();
+    }
     public DrawApplication(Observer o) {
         super.commands.addObserver(o);
     }
