@@ -50,7 +50,7 @@ public class DrawDocument extends Document {
                     Shape s = ((DrawCommand) c).getShape();
                     StringBuilder sb = new StringBuilder();
                     sb.append(s.getX() + " " + s.getY() + " " + s.getWidth() + " " + s.getHeight()
-                            + " " + s.getIsFilled() + " " + s.getClass().getSimpleName() + " " + s.getRgbColorCode());
+                            + " " + s.getIsFilled() + " " + s.getClass().getSimpleName() + " " + s.getColor());
                     writer.println(sb.toString());
                 }
             }
