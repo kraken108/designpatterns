@@ -1,10 +1,10 @@
 package Controller;
 
 import Model.Application.DrawApplication;
-import Model.Commands.Command;
-import Model.Commands.DrawCommand;
-import Model.Shapes.Circle;
-import Model.Shapes.Shape;
+import Model.Application.Commands.Command;
+import Model.Application.Commands.DrawCommand;
+import Model.Application.Shapes.Circle;
+import Model.Application.Shapes.Shape;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -15,8 +15,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.image.Image;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -158,7 +156,7 @@ public class Main extends Application implements Observer {
                 canvas.setOnMouseDragged((MouseEvent event)-> application.addCommand(new DrawCommand(new Circle(event.getX(),event.getY(),2,2,true,"000000"))));
                 break;
             case CHANGER:
-                canvas.setOnMousePressed((MouseEvent e)->)//TODO: gå baklänges genom command....
+            //    canvas.setOnMousePressed((MouseEvent e)->)//TODO: gå baklänges genom command....
                 canvas.setOnMouseDragged((MouseEvent event)-> System.out.print(""));
                 break;
         }

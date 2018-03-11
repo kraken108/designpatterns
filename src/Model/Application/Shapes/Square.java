@@ -1,4 +1,4 @@
-package Model.Shapes;
+package Model.Application.Shapes;
 
 public class Square extends Shape{
 

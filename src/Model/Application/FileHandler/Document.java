@@ -1,4 +1,4 @@
-package Model.FileHandler;
+package Model.Application.FileHandler;
 
 import Model.Application.*;
 

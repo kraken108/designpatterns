@@ -1,12 +1,15 @@
 package Model.Application;
 
-import Model.Commands.DrawCommand;
-import Model.FileHandler.Document;
-import Model.FileHandler.DrawDocument;
-import Model.Shapes.Shape;
-import Model.Shapes.ShapeFactory;
+import Model.Application.Commands.CommandFactory;
+import Model.Application.Commands.DrawCommand;
+import Model.Application.FileHandler.Document;
+import Model.Application.FileHandler.DrawDocument;
+import Model.Application.Shapes.Shape;
+import Model.Application.Shapes.ShapeFactory;
 
 import java.io.FileNotFoundException;
+import java.util.List;
+import java.util.Map;
 import java.util.Observer;
 
 public class DrawApplication extends Application {
@@ -14,13 +17,22 @@ public class DrawApplication extends Application {
     public String[] getAvailableShapes(){
         return new ShapeFactory().getShapes();
     }
-    public DrawApplication(Observer o) {
-        super.commands.addObserver(o);
+
+    public DrawApplication(){
     }
 
-    public void addDrawCommand(String shapeName, double x, double y, int width, int height, boolean isFilled,String color){
-        Shape s = new ShapeFactory().createShape(shapeName,x,y,width,height,isFilled,color);
-        super.addCommand(new DrawCommand(s));
+    @Override
+    public void addCommand(String command, List<Object> params) {
+        super.addCommand(new CommandFactory().createCommand(command,params));
+    }
+
+    @Override
+    public void addCommand(String command, Map params) {
+        super.addCommand(new CommandFactory().createCommand(command,params));
+    }
+
+    public DrawApplication(Observer o) {
+        super.commands.addObserver(o);
     }
 
     @Override

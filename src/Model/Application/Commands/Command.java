@@ -1,4 +1,4 @@
-package Model.Commands;
+package Model.Application.Commands;
 
 import java.util.LinkedList;
 import java.util.Observable;
@@ -15,6 +15,11 @@ public class Command extends Observable implements Cloneable{
 
     public static LinkedList<Command> getCommandHistory() {
         return commandHistory;
+    }
+
+    final public void clearCommands(){
+        commandHistory.clear();
+        undoneCommandHistory.clear();
     }
 
     final public void addCommand(Command c){

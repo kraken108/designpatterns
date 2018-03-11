@@ -1,4 +1,4 @@
-package Model.Shapes;
+package Model.Application.Shapes;
 
 abstract public class Shape {
     private double x;
