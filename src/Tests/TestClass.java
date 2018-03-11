@@ -1,7 +1,5 @@
 package Tests;
 
-import Model.*;
-import Model.Shapes.Shape;
 import Model.Shapes.ShapeFactory;
 
 public class TestClass {

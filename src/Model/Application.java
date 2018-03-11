@@ -1,8 +1,6 @@
-package Model.Application;
+package Model;
 
 import Model.Commands.Command;
-
-import java.util.ArrayList;
 
 abstract public class Application {
     protected Command commands;

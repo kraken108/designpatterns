@@ -1,12 +1,10 @@
 package Model.FileHandler;
 
-import Model.Application.Application;
+import Model.Application;
 import Model.Commands.Command;
 import Model.Commands.DrawCommand;
-import Model.Shapes.Circle;
 import Model.Shapes.Shape;
 import Model.Shapes.ShapeFactory;
-import Model.Shapes.Square;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;

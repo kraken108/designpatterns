@@ -1,6 +1,6 @@
 package Controller;
 
-import Model.Application.DrawApplication;
+import Model.DrawApplication;
 import Model.Commands.Command;
 import Model.Commands.DrawCommand;
 import Model.Shapes.Circle;
@@ -8,8 +8,6 @@ import Model.Shapes.Shape;
 import Model.Shapes.ShapeFactory;
 import Model.Shapes.Square;
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -19,13 +17,10 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.image.Image;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package Model.Application;
+package Model;
 
 import Model.Commands.DrawCommand;
 import Model.FileHandler.Document;

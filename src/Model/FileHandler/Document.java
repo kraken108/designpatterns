@@ -1,6 +1,6 @@
 package Model.FileHandler;
 
-import Model.Application.*;
+import Model.Application;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
