@@ -1,6 +1,9 @@
 package Controller;
 
 import Model.DrawApplication;
+import Model.Commands.Command;
+import Model.Commands.DrawCommand;
+import Model.Shapes.*;
 
 
 
@@ -53,6 +56,7 @@ public class Main extends Application implements Observer {
 
     @Override
     public void update(Observable observable, Object o) {
+        LinkedList<Command> commands = ((LinkedList<Command>) o);
         Canvas c = canvas;
         gc.clearRect(0, 0, c.getWidth(), c.getHeight());
 
@@ -75,24 +79,24 @@ public class Main extends Application implements Observer {
         drawController = new DrawController();
     }
 
-    private void getJavaFxElementReferences() {
+    private void getJavaFxElementReferences(){
         try {
             root = FXMLLoader.load(getClass().getResource("../View/main.fxml"));
         } catch (IOException e) {
             System.out.println("Couldn't retreive Main.FXML");
             System.exit(0);
         }
-        try {
-            for (Node n : root.getChildrenUnmodifiable()) {
-                try {
+        try{
+            for(Node n : root.getChildrenUnmodifiable()) {
+                try{
                     if (n.getId().equals("borderpane")) {
                         borderPane = (BorderPane) n;
                         for (Node nd : borderPane.getChildren()) {
-                            if (nd.getId().equals("hbox")) {
+                             if (nd.getId().equals("hbox")) {
                                 hbox = (HBox) nd;
-                                for (Node nod : (hbox.getChildren())) {
-                                    if (nod.getId().equals("shapeSection")) {
-                                        for (Node node : ((BorderPane) nod).getChildren()) {
+                                for(Node nod : (hbox.getChildren())){
+                                    if(nod.getId().equals("shapeSection")){
+                                        for(Node node:((BorderPane) nod).getChildren()) {
                                             try {
                                                 if (node.getId().equals("fillBox")) {
                                                     fillBox = (CheckBox) node;
@@ -100,57 +104,56 @@ public class Main extends Application implements Observer {
                                                     String[] strings = {"Square", "Circle"};
                                                     initializeChoices((BorderPane) nod, SHAPES, "shapes", strings);
                                                 }
-                                            } catch (NullPointerException e) {
-                                            }
+                                            } catch (NullPointerException e) {}
                                         }
-                                    } else if (nod.getId().equals("colorSection")) {
-                                        String[] strings = {"White", "Black", "Red", "Green", "Blue", "Yellow"};
-                                        initializeChoices((BorderPane) nod, COLORS, "colors", strings);
-                                    } else if (nod.getId().equals("sizeSection")) {
-                                        String[] strings = {"1", "2", "4", "8", "16", "32", "64"};
-                                        initializeChoices((BorderPane) nod, SIZES, "sizes", strings);
-                                    } else if (nod.getId().equals("buttonSection")) {
+                                    }else if(nod.getId().equals("colorSection")){
+                                        String[] strings = {"White","Black","Red","Green","Blue","Yellow"};
+                                        initializeChoices((BorderPane) nod,COLORS,"colors",strings);
+                                    }else if(nod.getId().equals("sizeSection")){
+                                        String[] strings = {"1","2","4","8","16","32","64"};
+                                        initializeChoices((BorderPane) nod,SIZES,"sizes",strings);
+                                    }else if(nod.getId().equals("buttonSection")){
                                         initializeUndoRedoButtons((BorderPane) nod);
-                                    } else if (nod.getId().equals("toolSection")) {
+                                    }else if(nod.getId().equals("toolSection")){
                                         initializeTools((BorderPane) nod);
                                     }
                                 }
-                            } else if (nd.getId().equals("canvas")) {
+                            }else if (nd.getId().equals("canvas")) {
                                 initializeCanvas(nd);
                             }
                         }
                     }
-                } catch (NullPointerException e) {
+                }catch(NullPointerException e){
                     System.out.println("Fack off");
                     e.printStackTrace();
                 }
 
             }
-        } catch (Exception e) {
+        }catch(Exception e){
             e.printStackTrace();
             System.exit(1);
         }
         setChoiceBoxListeners(BRUSH);
     }
 
-    private void initializeTools(BorderPane node) {
+    private void initializeTools(BorderPane node){
         System.out.println("tools");
-        for (Node n : node.getChildren()) {
-            try {
-                if (n.getId().equals("brush")) {
+        for(Node n:node.getChildren()){
+            try{
+                if(n.getId().equals("brush")){
                     brush = (Button) n;
-                    brush.setOnAction(e -> {
+                    brush.setOnAction(e-> {
                         setCanvasListener(BRUSH);
                         setChoiceBoxListeners(BRUSH);
                     });
-                } else if (n.getId().equals("changer")) {
+                }else if(n.getId().equals("changer")){
                     changer = (Button) n;
-                    changer.setOnAction(e -> {
+                    changer.setOnAction(e->{
                         setCanvasListener(CHANGER);
                         setChoiceBoxListeners(CHANGER);
                     });
                 }
-            } catch (NullPointerException e) {
+            }catch(NullPointerException e){
                 System.out.println("hehe");
             }
         }
@@ -169,7 +172,7 @@ public class Main extends Application implements Observer {
                 drawController.addDrawCommand(shapeName, event.getX(), event.getY(), size, size, fillBox.isSelected(), color,application));
     }
 
-    private void setCanvasListener(int tool) {
+    private void setCanvasListener(int tool){
         String shape = (String) shapeChoices.getSelectionModel().getSelectedItem();
         String color = (String) colorChoices.getSelectionModel().getSelectedItem();
         int size = Integer.parseInt((String) sizeChoices.getSelectionModel().getSelectedItem());
@@ -183,28 +186,28 @@ public class Main extends Application implements Observer {
                 break;
             case CHANGER:
                 //canvas.setOnMousePressed((MouseEvent e)->)//TODO: gå baklänges genom command....
-                canvas.setOnMouseDragged((MouseEvent event) -> System.out.print(""));
+                canvas.setOnMouseDragged((MouseEvent event)-> System.out.print(""));
                 break;
         }
     }
 
-    private void initializeUndoRedoButtons(BorderPane node) {
-        for (Node n : node.getChildren()) {
-            try {
-                if (n.getId().equals("undo")) {
+    private void initializeUndoRedoButtons(BorderPane node){
+        for(Node n:node.getChildren()){
+            try{
+                if(n.getId().equals("undo")){
                     undo = (Button) n;
-                    undo.setOnAction(e -> application.undoCommand());
-                } else if (n.getId().equals("redo")) {
+                    undo.setOnAction(e-> application.undoCommand());
+                }else if(n.getId().equals("redo")){
                     redo = (Button) n;
-                    redo.setOnAction(e -> application.redoCommand());
+                    redo.setOnAction(e-> application.redoCommand());
                 }
-            } catch (NullPointerException e) {
+            }catch(NullPointerException e){
                 System.out.println("hehe");
             }
         }
     }
 
-    private void initializeCanvas(Node nd) {
+    private void initializeCanvas(Node nd){
         canvas = (Canvas) nd;
         canvas.setHeight(SCREEN_HEIGHT);
         canvas.setWidth(SCREEN_WIDTH);
@@ -214,30 +217,30 @@ public class Main extends Application implements Observer {
         setCanvasListener(BRUSH);
     }
 
-    private void setChoiceBoxListeners(int tool) {
+    private void setChoiceBoxListeners(int tool){
         System.out.println("gggggg");
         int shape = shapeChoices.getSelectionModel().getSelectedIndex();
         int color = colorChoices.getSelectionModel().getSelectedIndex();
         int size = sizeChoices.getSelectionModel().getSelectedIndex();
         shapeChoices.getSelectionModel().selectedIndexProperty().addListener((observableValue, number, number2) ->
-                updateShapeCanvasListener((int) number2, color, size)
-        );
+                    updateShapeCanvasListener((int)number2,color,size)
+                );
 
         colorChoices.getSelectionModel().selectedIndexProperty().addListener((observableValue, number, number2) ->
-                updateShapeCanvasListener(shape, (int) number2, size)
-        );
+                    updateShapeCanvasListener(shape,(int)number2,size)
+                );
 
         sizeChoices.getSelectionModel().selectedIndexProperty().addListener((observableValue, number, number2) ->
-                updateShapeCanvasListener(shape, color, (int) number2)
-        );
+                    updateShapeCanvasListener(shape,color,(int)number2)
+                 );
     }
 
-    private void initializeChoices(BorderPane node, int whichChoiceBox, String target, String[] strings) {
+    private void initializeChoices(BorderPane node, int whichChoiceBox, String target, String[] strings){
         System.out.println(target);
-        for (Node n : node.getChildren()) {
+        for(Node n:node.getChildren()) {
             try {
                 if (n.getId().equals(target)) {
-                    switch (whichChoiceBox) {
+                    switch(whichChoiceBox){
                         case 0:
                             shapeChoices = (ChoiceBox) n;
                             shapeChoices.getItems().addAll(strings);
@@ -252,16 +255,15 @@ public class Main extends Application implements Observer {
                             sizeChoices = (ChoiceBox) n;
                             sizeChoices.getItems().addAll(strings);
                             sizeChoices.getSelectionModel().select(0);
-                            break;
-                    }
+                            break;                    }
                 }
-            } catch (NullPointerException e) {
+            }catch(NullPointerException e){
 
             }
         }
     }
 
-    private void initializeStage(Stage primaryStage) {
+    private void initializeStage(Stage primaryStage){
         primaryStage.setTitle("Paint - Ultimate Edition");
         primaryStage.setScene(new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT));
         primaryStage.show();

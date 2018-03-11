@@ -1,28 +1,38 @@
 package Model.Shapes;
 
+import javafx.scene.paint.Color;
+
 abstract public class Shape {
     private double x;
     private double y;
     private int width;
     private int height;
     private boolean isFilled;
-    private String rgbColorCode;
+    private String color;
 
-    public Shape(double x, double y, int width, int height, boolean isFilled,String rgbColorCode){
+    public Shape(double x, double y, int width, int height, boolean isFilled,String color){
         this.setX(x);
         this.setY(y);
         this.setWidth(width);
         this.setHeight(height);
-        this.setRgbColorCode(rgbColorCode);
-        this.isFilled = isFilled;
+        this.setColor(color);
+        this.setFilled(isFilled);
     }
 
-    public String getRgbColorCode() {
-        return rgbColorCode;
+    public boolean isFilled() {
+        return isFilled;
     }
 
-    public void setRgbColorCode(String rgbColorCode) {
-        this.rgbColorCode = rgbColorCode;
+    public void setFilled(boolean filled) {
+        isFilled = filled;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 
     public void setIsFilled(boolean isFilled){
@@ -38,7 +48,7 @@ abstract public class Shape {
         this.setY(0);
         this.setWidth(0);
         this.setHeight(0);
-        this.setRgbColorCode("0");
+        this.setColor("#000000");
         this.isFilled = false;
     }
 
