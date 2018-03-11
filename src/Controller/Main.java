@@ -1,5 +1,6 @@
 package Controller;
 
+import Model.Commands.DrawCommand;
 import Model.DrawApplication;
 
 
@@ -29,6 +30,7 @@ public class Main extends Application implements Observer {
 
     private final static int BRUSH = 0;
     private final static int CHANGER = 1;
+    private final static int ERASER = 2;
     private final static int SHAPES = 0;
     private final static int COLORS = 1;
     private final static int SIZES = 2;
@@ -148,6 +150,12 @@ public class Main extends Application implements Observer {
                         setCanvasListener(CHANGER);
                         setChoiceBoxListeners(CHANGER);
                     });
+                }else if(n.getId().equals("eraser")){
+                    changer = (Button) n;
+                    changer.setOnAction(e->{
+                        setCanvasListener(ERASER);
+                        setChoiceBoxListeners(ERASER);
+                    });
                 }
             }catch(NullPointerException e){
                 System.out.println("hehe");
@@ -181,8 +189,14 @@ public class Main extends Application implements Observer {
                         drawController.addDrawCommand(shape, event.getX(), event.getY(), size, size, fillBox.isSelected(), color,application));
                 break;
             case CHANGER:
-                //canvas.setOnMousePressed((MouseEvent e)->)//TODO: gå baklänges genom command....
-                canvas.setOnMouseDragged((MouseEvent event)-> System.out.print(""));
+                System.out.println("changer");
+                canvas.setOnMousePressed((MouseEvent e)-> application.editDrawCommand(e.getX(),e.getY(),
+                        shape,size,fillBox.isSelected(),color));
+                canvas.setOnMouseDragged((MouseEvent e)-> System.out.println(""));
+                break;
+            case ERASER:
+                canvas.setOnMousePressed((MouseEvent e)-> application.deleteDrawCommand(e.getX(),e.getY()));
+                canvas.setOnMouseDragged((MouseEvent e)-> application.deleteDrawCommand(e.getX(),e.getY()));
                 break;
         }
     }
@@ -214,20 +228,18 @@ public class Main extends Application implements Observer {
     }
 
     private void setChoiceBoxListeners(int tool){
-        System.out.println("gggggg");
-        int shape = shapeChoices.getSelectionModel().getSelectedIndex();
-        int color = colorChoices.getSelectionModel().getSelectedIndex();
-        int size = sizeChoices.getSelectionModel().getSelectedIndex();
         shapeChoices.getSelectionModel().selectedIndexProperty().addListener((observableValue, number, number2) ->
-                    updateShapeCanvasListener((int)number2,color,size)
+                    updateShapeCanvasListener((int)number2,colorChoices.getSelectionModel().getSelectedIndex(),sizeChoices.getSelectionModel().getSelectedIndex())
                 );
 
         colorChoices.getSelectionModel().selectedIndexProperty().addListener((observableValue, number, number2) ->
-                    updateShapeCanvasListener(shape,(int)number2,size)
+                    updateShapeCanvasListener(shapeChoices.getSelectionModel().getSelectedIndex(),
+                            (int)number2,sizeChoices.getSelectionModel().getSelectedIndex())
                 );
 
         sizeChoices.getSelectionModel().selectedIndexProperty().addListener((observableValue, number, number2) ->
-                    updateShapeCanvasListener(shape,color,(int)number2)
+                    updateShapeCanvasListener(shapeChoices.getSelectionModel().getSelectedIndex(),
+                            colorChoices.getSelectionModel().getSelectedIndex(),(int)number2)
                  );
     }
 

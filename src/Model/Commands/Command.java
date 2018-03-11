@@ -6,9 +6,9 @@ import java.util.Observable;
 
 public class Command extends Observable implements Cloneable{
 
-    private static LinkedList<Command> commandHistory = new LinkedList<>();
+    protected static LinkedList<Command> commandHistory = new LinkedList<>();
 
-    private static LinkedList<Command> undoneCommandHistory = new LinkedList<>();
+    protected static LinkedList<Command> undoneCommandHistory = new LinkedList<>();
 
     public static LinkedList<Command> getUndoneCommandHistory() {
         return undoneCommandHistory;

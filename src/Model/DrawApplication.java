@@ -18,6 +18,7 @@ public class DrawApplication extends Application {
     public String[] getAvailableShapes(){
         return new ShapeFactory().getShapes();
     }
+    private DrawCommand drawCommand = new DrawCommand();
 
 
     public List<Map> getShapes(){
@@ -48,8 +49,17 @@ public class DrawApplication extends Application {
         super.addCommand(new CommandFactory().createCommand(command,params));
     }
 
+    public void editDrawCommand(double x, double y,String shape,int size, boolean fill,String color){
+        drawCommand.editDrawCommand(x,y,shape,size,fill,color);
+    }
+
+    public void deleteDrawCommand(double x, double y){
+        drawCommand.deleteDrawCommand(x,y);
+    }
+
     public DrawApplication(Observer o) {
         super.commands.addObserver(o);
+        drawCommand.addObserver(o);
     }
 
     @Override

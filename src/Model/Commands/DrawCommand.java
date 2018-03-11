@@ -2,6 +2,7 @@ package Model.Commands;
 
 
 import Model.Shapes.Shape;
+import Model.Shapes.ShapeFactory;
 
 public class DrawCommand extends Command {
     private Shape shape;
@@ -9,6 +10,10 @@ public class DrawCommand extends Command {
     public DrawCommand(Shape s){
         super();
         this.shape = s;
+    }
+
+    public DrawCommand(){
+        shape = null;
     }
 
     public Shape getShape(){
@@ -24,25 +29,38 @@ public class DrawCommand extends Command {
         return new DrawCommand(this.shape);
     }
 
-    public DrawCommand findFirstOccurance(double x,double y){
+    private static int findFirstOccurance(double x,double y){
         Shape testShape;
+        int i = 0;
         for(Command c: Command.getCommandHistory()){
-            testShape = ((DrawCommand) c).getShape();
-            if(x>=testShape.getX()+(testShape.getWidth()/2) && x<=((DrawCommand) c).getShape().getX()-(testShape.getWidth()/2)){
-                if(y>=testShape.getY()+(testShape.getHeight()/2) && y<=((DrawCommand) c).getShape().getY()-(testShape.getHeight()/2)){
-                    return (DrawCommand) c;
+            if(c instanceof DrawCommand) {
+                testShape = ((DrawCommand) c).getShape();
+                if (x >= testShape.getX() - testShape.getWidth() && x <= testShape.getX() + testShape.getWidth()) {
+                    if (y >= testShape.getY() - testShape.getHeight() && y <= testShape.getY() + testShape.getHeight()) {
+                        return i;
+                    }
                 }
             }
+            i++;
         }
-        return null;
+        return -1;
     }
 
-    public void editDrawCommand(DrawCommand dc,Shape shape){
-        for(Command c:Command.getCommandHistory()){
-            if(((DrawCommand) c).equals(dc)){
-                ((DrawCommand) c).setShape(shape);
-            }
+    public void editDrawCommand(double x, double y,String shape,int size, boolean fill,String color){
+        try {
+            Command.getCommandHistory().set(findFirstOccurance(x, y), new DrawCommand(ShapeFactory.createShape(shape, x, y, size, size, fill, color)));
+            setChanged();
+            notifyObservers(commandHistory);
+        }catch(IndexOutOfBoundsException e){
+            System.out.println("no object found");
         }
+    }
+
+    public void deleteDrawCommand(double x,double y){
+        int dc = findFirstOccurance(x,y);
+        Command.getCommandHistory().remove(dc);
+        setChanged();
+        notifyObservers(commandHistory);
     }
 
 }
