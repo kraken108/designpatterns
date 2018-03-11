@@ -1,4 +1,4 @@
-package Model.Application.Commands;
+package Model.Commands;
 
 import java.util.LinkedList;
 import java.util.NoSuchElementException;

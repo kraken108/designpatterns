@@ -1,6 +1,7 @@
-package Model.Application.Commands;
+package Model.Commands;
 
-import Model.Application.Shapes.Shape;
+
+import Model.Shapes.Shape;
 
 public class DrawCommand extends Command {
     private Shape shape;

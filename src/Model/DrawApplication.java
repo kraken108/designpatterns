@@ -1,11 +1,10 @@
 package Model;
 
-import Model.Application.Commands.CommandFactory;
-import Model.Application.Commands.DrawCommand;
-import Model.Application.FileHandler.Document;
-import Model.Application.FileHandler.DrawDocument;
-import Model.Application.Shapes.Shape;
-import Model.Application.Shapes.ShapeFactory;
+
+import Model.Commands.CommandFactory;
+import Model.FileHandler.Document;
+import Model.FileHandler.DrawDocument;
+import Model.Shapes.ShapeFactory;
 
 import java.io.FileNotFoundException;
 import java.util.List;
@@ -21,10 +20,6 @@ public class DrawApplication extends Application {
     public DrawApplication(){
     }
 
-    @Override
-    public void addCommand(String command, List<Object> params) {
-        super.addCommand(new CommandFactory().createCommand(command,params));
-    }
 
     @Override
     public void addCommand(String command, Map params) {

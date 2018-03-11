@@ -1,4 +1,4 @@
-package Model.Application.Shapes;
+package Model.Shapes;
 
 public class Circle extends Shape {
 

@@ -15,9 +15,9 @@ public class DrawDocument extends Document {
     @Override
     void loadDocument(ArrayList<String> rows, Application world) {
         try{
-            for(String s : rows){
+            for(String s : rows) {
                 String[] strings = s.split(" ");
-                if(strings.length >= 6){
+                if (strings.length >= 6) {
                     double x = Double.parseDouble(strings[0]);
                     double y = Double.parseDouble(strings[1]);
                     int width = Integer.parseInt(strings[2]);
@@ -26,13 +26,14 @@ public class DrawDocument extends Document {
                     String type = strings[5];
                     String color = strings[6];
 
-                type = type.toUpperCase();
-                Shape shape = new ShapeFactory().createShape(type,x,y,width,height,isFilled,color);
-                if(shape != null){
-                    world.addCommand(new DrawCommand(shape));
+                    type = type.toUpperCase();
+                    Shape shape = new ShapeFactory().createShape(type, x, y, width, height, isFilled, color);
+                    if (shape != null) {
+                        world.addCommand(new DrawCommand(shape));
+                    }
+                } else {
+                    System.out.println("Failed to read read row, less than 5 elements");
                 }
-            }else{
-                System.out.println("Failed to read read row, less than 5 elements");
             }
         }catch(Exception e){
             e.printStackTrace();

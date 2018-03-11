@@ -1,6 +1,7 @@
 package Model;
 
 import Model.Commands.Command;
+import Model.Commands.DrawCommand;
 
 import java.util.List;
 import java.util.Map;
@@ -19,8 +20,6 @@ abstract public class Application {
     public void clearApplication(){
         commands.clearCommands();
     }
-
-    public abstract void addCommand(String command,List<Object> params);
 
     public abstract void addCommand(String command, Map params);
 

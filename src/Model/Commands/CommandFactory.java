@@ -1,7 +1,8 @@
-package Model.Application.Commands;
+package Model.Commands;
 
-import Model.Application.Shapes.Shape;
-import Model.Application.Shapes.ShapeFactory;
+
+import Model.Shapes.Shape;
+import Model.Shapes.ShapeFactory;
 
 import java.util.List;
 import java.util.Map;
@@ -24,18 +25,5 @@ public class CommandFactory {
         }
         return null;
     }
-    public Command createCommand(String command, List<Object> params){
-        command = command.toUpperCase();
-        if(params.size() >= 2){
-            switch(command){
-                case "DRAW":
-                    Shape s = new ShapeFactory().createShape((String)params.get(0),(List<Object>) params.get(1));
-                    return new DrawCommand(s);
-                default:
-                    return null;
-            }
-        }else{
-            return null;
-        }
-    }
+
 }
