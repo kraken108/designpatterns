@@ -1,15 +1,16 @@
 package Model;
 
 
+import Model.Commands.Command;
 import Model.Commands.CommandFactory;
+import Model.Commands.DrawCommand;
 import Model.FileHandler.Document;
 import Model.FileHandler.DrawDocument;
+import Model.Shapes.Shape;
 import Model.Shapes.ShapeFactory;
 
 import java.io.FileNotFoundException;
-import java.util.List;
-import java.util.Map;
-import java.util.Observer;
+import java.util.*;
 
 public class DrawApplication extends Application {
 
@@ -17,9 +18,29 @@ public class DrawApplication extends Application {
         return new ShapeFactory().getShapes();
     }
 
-    public DrawApplication(){
+
+    public List<Map> getShapes(){
+        List<Map> shapes = new ArrayList<>();
+
+        for(Command c : Command.getCommandHistory()){
+            if(c instanceof DrawCommand){
+                Shape s = ((DrawCommand) c).getShape();
+                Map<String,Object> map = new HashMap<>();
+                map.put("NAME",s.getClass().getSimpleName());
+                map.put("X",s.getX());
+                map.put("Y",s.getY());
+                map.put("WIDTH",s.getWidth());
+                map.put("HEIGHT",s.getHeight());
+                map.put("FILLED",s.getIsFilled());
+                map.put("COLOR",s.getRgbColorCode());
+                shapes.add(map);
+            }
+        }
+        return shapes;
     }
 
+    public DrawApplication(){
+    }
 
     @Override
     public void addCommand(String command, Map params) {
