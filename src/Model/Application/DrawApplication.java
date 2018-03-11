@@ -7,11 +7,15 @@ import Model.Shapes.Shape;
 import Model.Shapes.ShapeFactory;
 
 import java.io.FileNotFoundException;
+import java.util.Observer;
 
 public class DrawApplication extends Application {
 
     public String[] getAvailableShapes(){
         return new ShapeFactory().getShapes();
+    }
+    public DrawApplication(Observer o) {
+        super.commands.addObserver(o);
     }
 
     public void addDrawCommand(String shapeName, double x, double y, int width, int height, boolean isFilled,String color){

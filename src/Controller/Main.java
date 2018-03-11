@@ -1,8 +1,10 @@
 package Controller;
 
-import Model.Circle;
-import Model.Command;
-import Model.DrawCommand;
+import Model.Application.DrawApplication;
+import Model.Commands.Command;
+import Model.Commands.DrawCommand;
+import Model.Shapes.Circle;
+import Model.Shapes.Shape;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -10,9 +12,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -20,9 +24,14 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.Observable;
+import java.util.Observer;
 
-public class Main extends Application {
+public class Main extends Application implements Observer {
 
+    private final static int BRUSH = 0;
+    private final static int CHANGER = 1;
     private final static int SHAPES = 0;
     private final static int COLORS = 1;
     private final static int SIZES = 2;
@@ -37,6 +46,28 @@ public class Main extends Application {
     private ChoiceBox colorChoices;
     private ChoiceBox sizeChoices;
     private HBox hbox;
+    private Button undo;
+    private Button redo;
+    private DrawApplication application;
+    private Button brush;
+    private Button changer;
+
+    public void draw(Shape s){
+        gc.strokeOval(s.getX(),s.getY(),s.getHeight(),s.getWidth());
+    }
+
+    @Override
+    public void update(Observable observable, Object o) {
+        LinkedList<Command> commands = ((LinkedList<Command>) o);
+        Canvas c = canvas;
+        gc.clearRect(0, 0, c.getWidth(), c.getHeight());
+        for (int i = 0; i < commands.size(); i++) {
+            System.out.println(commands.get(i).toString());
+            if(commands.get(i) instanceof DrawCommand){
+                draw(((DrawCommand) commands.get(i)).getShape());
+            }
+        }
+    }
 
     public static void main(String[] args) {
         launch(args);
@@ -46,6 +77,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         getJavaFxElementReferences();
         initializeStage(primaryStage);
+        application = new DrawApplication(this);
     }
 
     private void getJavaFxElementReferences(){
@@ -83,6 +115,10 @@ public class Main extends Application {
                                     }else if(nod.getId().equals("sizeSection")){
                                         String[] strings = {"1","2","4","8","16","32","64"};
                                         initializeChoices((BorderPane) nod,SIZES,"sizes",strings);
+                                    }else if(nod.getId().equals("buttonSection")){
+                                        initializeUndoRedoButtons((BorderPane) nod);
+                                    }else if(nod.getId().equals("toolSection")){
+                                        initializeTools((BorderPane) nod);
                                     }
                                 }
                             }
@@ -99,6 +135,51 @@ public class Main extends Application {
         }
     }
 
+    private void initializeTools(BorderPane node){
+        for(Node n:node.getChildren()){
+            try{
+                if(n.getId().equals("brush")){
+                    brush = (Button) n;
+                    brush.setOnAction(e-> application.undoCommand());
+                }else if(n.getId().equals("changer")){
+                    changer = (Button) n;
+                    changer.setOnAction(e-> application.redoCommand());
+                }
+            }catch(NullPointerException e){
+                System.out.println("hehe");
+            }
+        }
+    }
+
+    private void changeCanvasListener(int tool){
+        switch(tool){
+            case BRUSH:
+                canvas.setOnMousePressed((MouseEvent event)-> application.addCommand(new DrawCommand(new Circle(event.getX(),event.getY(),2,2,true,"000000"))));
+                canvas.setOnMouseDragged((MouseEvent event)-> application.addCommand(new DrawCommand(new Circle(event.getX(),event.getY(),2,2,true,"000000"))));
+                break;
+            case CHANGER:
+                canvas.setOnMousePressed((MouseEvent e)->)//TODO: gå baklänges genom command....
+                canvas.setOnMouseDragged((MouseEvent event)-> System.out.print(""));
+                break;
+        }
+    }
+
+    private void initializeUndoRedoButtons(BorderPane node){
+        for(Node n:node.getChildren()){
+            try{
+                if(n.getId().equals("undo")){
+                    undo = (Button) n;
+                    undo.setOnAction(e-> application.undoCommand());
+                }else if(n.getId().equals("redo")){
+                    redo = (Button) n;
+                    redo.setOnAction(e-> application.redoCommand());
+                }
+            }catch(NullPointerException e){
+                System.out.println("hehe");
+            }
+        }
+    }
+
     private void initializeCanvas(Node nd){
         canvas = (Canvas) nd;
         canvas.setHeight(SCREEN_HEIGHT);
@@ -106,13 +187,8 @@ public class Main extends Application {
         gc = canvas.getGraphicsContext2D();
         gc.setStroke(Color.BLACK);
         gc.setLineWidth(5);
-        canvas.setOnMousePressed((MouseEvent event)->{
-            gc.strokeRoundRect(event.getX(),event.getY(),2,2,5,5);
-            Command.addCommand(new DrawCommand(new Circle(event.getX(),event.getY(),2,2,true)));
-        });
-        canvas.setOnMouseDragged((MouseEvent event)->{
-            gc.strokeRoundRect(event.getX(),event.getY(),2,2,5,5);
-        });
+        canvas.setOnMousePressed((MouseEvent event)-> application.addCommand(new DrawCommand(new Circle(event.getX(),event.getY(),2,2,true,"000000"))));
+        canvas.setOnMouseDragged((MouseEvent event)-> application.addCommand(new DrawCommand(new Circle(event.getX(),event.getY(),2,2,true,"000000"))));
     }
 
     private void initializeChoices(BorderPane node, int whichChoiceBox, String target, String[] strings){

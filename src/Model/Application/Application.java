@@ -5,25 +5,33 @@ import Model.Commands.Command;
 import java.util.ArrayList;
 
 abstract public class Application {
-    private ArrayList<Command> commands;
+    protected Command commands;
+
+    public Command getCommands() {
+        return commands;
+    }
 
     public Application(){
-        commands = new ArrayList<>();
+        commands = new Command();
     }
 
     public void addCommand(Command c){
         if(c != null){
-            commands.add(c);
+            commands.addCommand(c);
         }
+    }
+
+    public void undoCommand(){
+        commands.undoCommand();
+    }
+
+    public void redoCommand(){
+        commands.redoCommand();
     }
 
     public abstract void saveWorld(String fileName);
 
-    public abstract void openWorld(String fileName);
+   public abstract void openWorld(String fileName);
 
 
-
-    public ArrayList<Command> getCommands(){
-        return commands;
-    }
 }
