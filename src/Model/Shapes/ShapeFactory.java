@@ -1,11 +1,14 @@
 package Model.Shapes;
 
+import Model.Commands.Command;
+import Model.Factory.AbstractFactory;
+
 import java.util.Map;
 
-public class ShapeFactory {
+public class ShapeFactory extends AbstractFactory{
 
 
-    public static Shape createShape(String name, Map params){
+    public Shape createShape(String name, Map params){
         name = name.toUpperCase();
         try{
             switch(name){
@@ -44,6 +47,11 @@ public class ShapeFactory {
 
     }
 
+    @Override
+    public Command createCommand(String name, Map params) {
+        return null;
+    }
+
     public static Shape createShape(String name, double x, double y, int width, int height, boolean isFilled,String color) {
         switch (name) {
             case "Circle":
@@ -55,7 +63,8 @@ public class ShapeFactory {
         }
     }
 
-    public static String[] getShapes(){
+    @Override
+    public String[] getShapes(){
         String[] strs = {"Circle","Square"};
         return strs;
     }

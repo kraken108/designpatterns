@@ -5,11 +5,11 @@ import Model.Commands.Command;
 import Model.Commands.CommandFactory;
 import Model.Commands.DeleteDrawCommand;
 import Model.Commands.DrawCommand;
+import Model.Factory.FactoryProducer;
 import Model.FileHandler.Document;
 import Model.FileHandler.DrawDocument;
 import Model.Shapes.Shape;
 import Model.Shapes.ShapeFactory;
-import javafx.scene.paint.Color;
 
 import java.io.FileNotFoundException;
 import java.util.*;
@@ -17,11 +17,11 @@ import java.util.*;
 public class DrawApplication extends Application {
 
     public String[] getAvailableShapes(){
-        return new ShapeFactory().getShapes();
+        return FactoryProducer.getInstance().createFactory("SHAPE").getShapes();
     }
+
     private DrawCommand drawCommand = new DrawCommand();
     private DeleteDrawCommand deleteDrawCommand = new DeleteDrawCommand();
-
 
     public List<Map> getShapes(){
         List<Map> shapes = new ArrayList<>();
@@ -48,7 +48,7 @@ public class DrawApplication extends Application {
 
     @Override
     public void addCommand(String command, Map params) {
-        super.addCommand(new CommandFactory().createCommand(command,params));
+        super.addCommand(FactoryProducer.getInstance().createFactory("COMMAND").createCommand(command,params));
     }
 
     public void editDrawCommand(double x, double y,String shape,int size, boolean fill,String color){
@@ -78,6 +78,7 @@ public class DrawApplication extends Application {
     public void openWorld(String fileName){
         Document s = new DrawDocument();
         try {
+            System.out.println("Trying to open: " + fileName);
             s.openDocument(fileName,this);
         } catch (FileNotFoundException e) {
             e.printStackTrace();

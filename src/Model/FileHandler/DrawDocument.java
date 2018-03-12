@@ -3,12 +3,15 @@ package Model.FileHandler;
 import Model.Application;
 import Model.Commands.Command;
 import Model.Commands.DrawCommand;
+import Model.Factory.FactoryProducer;
 import Model.Shapes.Shape;
 import Model.Shapes.ShapeFactory;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DrawDocument extends Document {
 
@@ -17,7 +20,9 @@ public class DrawDocument extends Document {
         try{
             for(String s : rows) {
                 String[] strings = s.split(" ");
+                System.out.println("Before big eq 6");
                 if (strings.length >= 6) {
+                    System.out.println("After dewd");
                     double x = Double.parseDouble(strings[0]);
                     double y = Double.parseDouble(strings[1]);
                     int width = Integer.parseInt(strings[2]);
@@ -27,8 +32,19 @@ public class DrawDocument extends Document {
                     String color = strings[6];
 
                     type = type.toUpperCase();
-                    Shape shape = new ShapeFactory().createShape(type, x, y, width, height, isFilled, color);
+
+                    Map<String,Object> map = new HashMap<>();
+                    map.put("X",x);
+                    map.put("Y",y);
+                    map.put("WIDTH",width);
+                    map.put("HEIGHT",height);
+                    map.put("FILLED",isFilled);
+                    map.put("COLOR",color);
+
+                    Shape shape = FactoryProducer.getInstance().createFactory("SHAPE").createShape(type,map);
+                    System.out.println("shaperino");
                     if (shape != null) {
+                        System.out.println("ADDING COMMAND from FILE");
                         world.addCommand(new DrawCommand(shape));
                     }
                 } else {

@@ -1,28 +1,30 @@
 package Controller;
 
-import Model.Commands.DrawCommand;
+
 import Model.DrawApplication;
 
 
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -54,6 +56,7 @@ public class Main extends Application implements Observer {
 
     private DrawController drawController;
 
+    private Stage primaryStage;
     @Override
     public void update(Observable observable, Object o) {
         Canvas c = canvas;
@@ -72,9 +75,10 @@ public class Main extends Application implements Observer {
 
     @Override
     public void start(Stage primaryStage) {
+        this.primaryStage = primaryStage;
+        application = new DrawApplication(this);
         getJavaFxElementReferences();
         initializeStage(primaryStage);
-        application = new DrawApplication(this);
         drawController = new DrawController();
     }
 
@@ -88,7 +92,55 @@ public class Main extends Application implements Observer {
         try{
             for(Node n : root.getChildrenUnmodifiable()) {
                 try{
-                    if (n.getId().equals("borderpane")) {
+                    if(n instanceof MenuBar){
+                        MenuBar menuBar = (MenuBar)n;
+                        for(Menu m : menuBar.getMenus()){
+                            if(m.getText().equals("File")){
+                                for(MenuItem mi : m.getItems()){
+                                    System.out.println("MENU ITEM:" + mi.getText());
+                                    if(mi.getText() != null){
+                                        if(mi.getText().equals("New")){
+                                            System.out.println("SETTING NEW ACTION");
+                                            mi.setOnAction(new EventHandler<ActionEvent>() {
+                                                @Override
+                                                public void handle(ActionEvent event) {
+                                                    application.clearApplication();
+                                                }
+                                            });
+                                        }else if(mi.getText().equals("Open…")){
+                                            System.out.println("SETTING OPEN ACTION");
+                                            mi.setOnAction(new EventHandler<ActionEvent>() {
+                                                @Override
+                                                public void handle(ActionEvent event) {
+                                                    FileChooser fileChooser = new FileChooser();
+                                                    fileChooser.setTitle("Open file");
+                                                    File file = fileChooser.showOpenDialog(primaryStage);
+                                                    if(file != null){
+                                                        application.openWorld(file.getAbsolutePath());
+                                                    }
+                                                }
+                                            });
+                                        }else if(mi.getText().equals("Save")){
+                                            System.out.println("SETTING SAVE ACTION");
+                                            mi.setOnAction(new EventHandler<ActionEvent>() {
+                                                @Override
+                                                public void handle(ActionEvent event) {
+                                                    FileChooser fileChooser = new FileChooser();
+                                                    fileChooser.setTitle("Save file");
+                                                    File file = fileChooser.showSaveDialog(primaryStage);
+                                                    if(file != null){
+                                                        application.saveWorld(file.getAbsolutePath());
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }
+
+                                }
+                            }
+                        }
+
+                    }else if (n.getId().equals("borderpane")) {
                         borderPane = (BorderPane) n;
                         for (Node nd : borderPane.getChildren()) {
                              if (nd.getId().equals("hbox")) {
@@ -100,7 +152,12 @@ public class Main extends Application implements Observer {
                                                 if (node.getId().equals("fillBox")) {
                                                     fillBox = (CheckBox) node;
                                                 } else if (node.getId().equals("shapes")) {
-                                                    String[] strings = {"Square", "Circle"};
+                                                    String[] strings =
+                                                            application.getAvailableShapes();
+                                                    System.out.println("LENGTH OF STRINGS: " + strings.length);
+                                                    //String[] strings = {"Square", "Circle"};
+
+                                                    //get shapes from application
                                                     initializeChoices((BorderPane) nod, SHAPES, "shapes", strings);
                                                 }
                                             } catch (NullPointerException e) {}
