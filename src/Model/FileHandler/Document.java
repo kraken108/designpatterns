@@ -28,8 +28,8 @@ abstract public class Document {
         ArrayList<String> rows = new ArrayList<>();
         try {
             String line = br.readLine();
-
             while (line != null) {
+                System.out.println("Line: " + line);
                 rows.add(line);
                 line = br.readLine();
             }

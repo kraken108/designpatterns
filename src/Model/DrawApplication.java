@@ -76,6 +76,7 @@ public class DrawApplication extends Application {
     public void openWorld(String fileName){
         Document s = new DrawDocument();
         try {
+            System.out.println("Trying to open: " + fileName);
             s.openDocument(fileName,this);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
