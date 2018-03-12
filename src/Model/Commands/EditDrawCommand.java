@@ -37,9 +37,7 @@ public class EditDrawCommand extends Command {
             Shape previousShape = ((DrawCommand) Command.getCommandHistory().get(dc)).getShape();
             Shape tempShape = ShapeFactory.createShape(shape, previousShape.getX(), previousShape.getY(), size, size, fill, color);
             ((DrawCommand) Command.getCommandHistory().get(dc)).setShape(tempShape);
-            //Command.getCommandHistory().add(0, new EditDrawCommand(ShapeFactory.createShape(shape, previousShape.getX(), previousShape.getY(), size, size, fill, color)));
-            Command.getCommandHistory().add(0, new EditDrawCommand(previousShape,index,tempShape));
-
+            Command.getCommandHistory().addLast( new EditDrawCommand(previousShape,dc,tempShape));
             setChanged();
             notifyObservers(commandHistory);
         }catch(IndexOutOfBoundsException e){

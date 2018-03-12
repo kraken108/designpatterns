@@ -28,7 +28,7 @@ public class Command extends Observable implements Cloneable{
     }
 
     final public void addCommand(Command c){
-        commandHistory.addFirst(c);
+        commandHistory.addLast(c);
         setChanged();
         notifyObservers(commandHistory);
     }
@@ -36,7 +36,7 @@ public class Command extends Observable implements Cloneable{
     final protected static int findFirstOccurance(double x,double y){
         Shape testShape;
         int i  = 0;
-        for(Command c: Command.getCommandHistory()){
+        for(Command c: reverseCommandList((LinkedList<Command>) Command.getCommandHistory().clone())){
             if(c instanceof DrawCommand) {
                 testShape = ((DrawCommand) c).getShape();
                 if (x >= testShape.getX() && x <= testShape.getX() + testShape.getWidth()) {
@@ -50,34 +50,41 @@ public class Command extends Observable implements Cloneable{
         return -1;
     }
 
-    final public void undoCommand(){
+    final public void undoCommand(int index){
         try {
-            undoneCommandHistory.addFirst((Command) commandHistory.getFirst().clone());
-
-        Command temp = commandHistory.getFirst();
-        commandHistory.removeFirst();
+        Command temp = commandHistory.get(commandHistory.size()-index);
+            undoneCommandHistory.addLast((Command) commandHistory.getLast().clone());
+            //commandHistory.set(commandHistory.size()-index,new PlaceHolderCommand()); //remove
+            commandHistory.removeLast();
         if(temp instanceof DeleteDrawCommand){
-            commandHistory.add(((DeleteDrawCommand) temp).getIndex(),
+            commandHistory.set(((DeleteDrawCommand) temp).getIndex(),
                     (DrawCommand)((DeleteDrawCommand) temp).getDeletedCommand());
         }else if(temp instanceof EditDrawCommand){
-            ((DrawCommand) commandHistory.get(((EditDrawCommand) temp).getIndex())).setShape(((EditDrawCommand) temp).getPrevShape());
+            commandHistory.set(((EditDrawCommand) temp).getIndex(),new DrawCommand(((EditDrawCommand) temp).getPrevShape()));
         }
         setChanged();
         notifyObservers(commandHistory);
-        } catch (NoSuchElementException |CloneNotSupportedException e) {
-            System.out.println("This action can't be redone.");
+        } catch (IndexOutOfBoundsException|NoSuchElementException |CloneNotSupportedException e) {
+            System.out.println("Bad action.");
         }
     }
 
     final public void redoCommand() {
         try {
-            Command temp = undoneCommandHistory.pop();
+            System.out.println(":)))))"+undoneCommandHistory.size());
+            Command temp = undoneCommandHistory.getLast();
+            undoneCommandHistory.removeLast(); //remove
             if(temp instanceof DeleteDrawCommand){
-                commandHistory.remove(((DeleteDrawCommand) temp).getIndex());
+                System.out.println("del");
+                //commandHistory.set(((DeleteDrawCommand) temp).getIndex(),new PlaceHolderCommand()); //remove
+                commandHistory.removeLast();
             }else if (temp instanceof EditDrawCommand){
+                System.out.println("edit");
                 ((DrawCommand)commandHistory.get(((EditDrawCommand) temp).getIndex())).setShape(((EditDrawCommand) temp).getNewShape());
             }
-            addCommand(temp);
+            else {
+                addCommand(temp);
+            }
             setChanged();
             notifyObservers(commandHistory);
         } catch (NoSuchElementException e) {
@@ -85,4 +92,13 @@ public class Command extends Observable implements Cloneable{
         }
     }
 
+
+    private static LinkedList<Command> reverseCommandList(LinkedList<Command> list){
+        System.out.println("l1: "+commandHistory.size());
+        LinkedList<Command> rList = new LinkedList<>();
+        while(!list.isEmpty())
+            rList.addLast(list.pop());
+        System.out.println("l2: "+commandHistory.size());
+        return rList;
+    }
 }

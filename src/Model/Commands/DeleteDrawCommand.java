@@ -24,18 +24,14 @@ public class DeleteDrawCommand extends Command {
     }
 
     public void deleteDrawCommand(double x,double y){
-        System.out.println("del len: "+Command.getCommandHistory().size());
         try {
-            index = findFirstOccurance(x, y);
-            if(index==-1){
-                System.out.println("kuken");
+            int i = findFirstOccurance(x, y);
+            if(i==-1){
                 return;
             }
-            System.out.println("runko runkovich");
-            Command rCom = Command.getCommandHistory().get(index);
-            Command.getCommandHistory().remove(index);
-            Command.getCommandHistory().add(0,new DeleteDrawCommand(rCom,index));
-            System.out.println(":))");
+            Command rCom = Command.getCommandHistory().get(i);
+            Command.getCommandHistory().set(i,new PlaceHolderCommand()); // remove
+            Command.getCommandHistory().addLast(new DeleteDrawCommand(rCom,i));
             setChanged();
             notifyObservers(commandHistory);
         }catch(IndexOutOfBoundsException e){
