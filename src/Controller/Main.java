@@ -1,6 +1,6 @@
 package Controller;
 
-import Model.Commands.DrawCommand;
+
 import Model.DrawApplication;
 
 
@@ -71,9 +71,9 @@ public class Main extends Application implements Observer {
 
     @Override
     public void start(Stage primaryStage) {
+        application = new DrawApplication(this);
         getJavaFxElementReferences();
         initializeStage(primaryStage);
-        application = new DrawApplication(this);
         drawController = new DrawController();
     }
 
@@ -99,7 +99,12 @@ public class Main extends Application implements Observer {
                                                 if (node.getId().equals("fillBox")) {
                                                     fillBox = (CheckBox) node;
                                                 } else if (node.getId().equals("shapes")) {
-                                                    String[] strings = {"Square", "Circle"};
+                                                    String[] strings =
+                                                            application.getAvailableShapes();
+                                                    System.out.println("LENGTH OF STRINGS: " + strings.length);
+                                                    //String[] strings = {"Square", "Circle"};
+
+                                                    //get shapes from application
                                                     initializeChoices((BorderPane) nod, SHAPES, "shapes", strings);
                                                 }
                                             } catch (NullPointerException e) {}
