@@ -3,6 +3,7 @@ package Model;
 
 import Model.Commands.Command;
 import Model.Commands.CommandFactory;
+import Model.Commands.DeleteDrawCommand;
 import Model.Commands.DrawCommand;
 import Model.FileHandler.Document;
 import Model.FileHandler.DrawDocument;
@@ -19,6 +20,7 @@ public class DrawApplication extends Application {
         return new ShapeFactory().getShapes();
     }
     private DrawCommand drawCommand = new DrawCommand();
+    private DeleteDrawCommand deleteDrawCommand = new DeleteDrawCommand();
 
 
     public List<Map> getShapes(){
@@ -54,7 +56,7 @@ public class DrawApplication extends Application {
     }
 
     public void deleteDrawCommand(double x, double y){
-        drawCommand.deleteDrawCommand(x,y);
+        deleteDrawCommand.deleteDrawCommand(x,y);
     }
 
     public DrawApplication(Observer o) {

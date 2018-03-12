@@ -29,14 +29,14 @@ public class DrawCommand extends Command {
         return new DrawCommand(this.shape);
     }
 
-    private static int findFirstOccurance(double x,double y){
+    final protected static int findFirstOccurance(double x,double y){
         Shape testShape;
-        int i = 0;
+        int i  = 0;
         for(Command c: Command.getCommandHistory()){
             if(c instanceof DrawCommand) {
                 testShape = ((DrawCommand) c).getShape();
-                if (x >= testShape.getX() - testShape.getWidth() && x <= testShape.getX() + testShape.getWidth()) {
-                    if (y >= testShape.getY() - testShape.getHeight() && y <= testShape.getY() + testShape.getHeight()) {
+                if (x >= testShape.getX() && x <= testShape.getX() + testShape.getWidth()) {
+                    if (y >= testShape.getY() && y <= testShape.getY() + testShape.getHeight()) {
                         return i;
                     }
                 }
@@ -48,19 +48,16 @@ public class DrawCommand extends Command {
 
     public void editDrawCommand(double x, double y,String shape,int size, boolean fill,String color){
         try {
-            Command.getCommandHistory().set(findFirstOccurance(x, y), new DrawCommand(ShapeFactory.createShape(shape, x, y, size, size, fill, color)));
+            int dc = findFirstOccurance(x, y);
+            System.out.println("first occ: "+dc);
+            Shape previousShape = ((DrawCommand) Command.getCommandHistory().get(dc)).getShape();
+            Command.getCommandHistory().remove(dc);
+            Command.getCommandHistory().add(0, new DrawCommand(ShapeFactory.createShape(shape, previousShape.getX(), previousShape.getY(), size, size, fill, color)));
             setChanged();
             notifyObservers(commandHistory);
         }catch(IndexOutOfBoundsException e){
             System.out.println("no object found");
         }
-    }
-
-    public void deleteDrawCommand(double x,double y){
-        int dc = findFirstOccurance(x,y);
-        Command.getCommandHistory().remove(dc);
-        setChanged();
-        notifyObservers(commandHistory);
     }
 
 }

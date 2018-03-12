@@ -50,6 +50,7 @@ public class Main extends Application implements Observer {
     private DrawApplication application;
     private Button brush;
     private Button changer;
+    private Button eraser;
 
     private DrawController drawController;
 
@@ -151,8 +152,8 @@ public class Main extends Application implements Observer {
                         setChoiceBoxListeners(CHANGER);
                     });
                 }else if(n.getId().equals("eraser")){
-                    changer = (Button) n;
-                    changer.setOnAction(e->{
+                    eraser = (Button) n;
+                    eraser.setOnAction(e->{
                         setCanvasListener(ERASER);
                         setChoiceBoxListeners(ERASER);
                     });
@@ -163,17 +164,28 @@ public class Main extends Application implements Observer {
         }
     }
 
-    private void updateShapeCanvasListener(int shapeVal, int colorVal, int sizeVal) {
+    private void updateShapeCanvasListener(int shapeVal, int colorVal, int sizeVal,int tool) {
         String shapeName = (String) shapeChoices.getItems().get(shapeVal);
         String color = (String) colorChoices.getItems().get(colorVal);
         int size = Integer.parseInt((String) sizeChoices.getItems().get(sizeVal));
-        System.out.println("shape: " + shapeName + " color: " + color + " size: " + size + " fillbox: " + fillBox.isSelected());
-        canvas.setOnMousePressed((MouseEvent event) ->
-
-                drawController.addDrawCommand(shapeName, event.getX(), event.getY(), size, size, fillBox.isSelected(), color,application));
-
-        canvas.setOnMouseDragged((MouseEvent event) ->
-                drawController.addDrawCommand(shapeName, event.getX(), event.getY(), size, size, fillBox.isSelected(), color,application));
+        switch (tool) {
+            case BRUSH:
+                canvas.setOnMousePressed((MouseEvent event) ->
+                        drawController.addDrawCommand(shapeName, event.getX(), event.getY(), size, size, fillBox.isSelected(), color,application));
+                canvas.setOnMouseDragged((MouseEvent event) ->
+                        drawController.addDrawCommand(shapeName, event.getX(), event.getY(), size, size, fillBox.isSelected(), color,application));
+                break;
+            case CHANGER:
+                System.out.println("changer");
+                canvas.setOnMousePressed((MouseEvent e)-> application.editDrawCommand(e.getX(),e.getY(),
+                        shapeName,size,fillBox.isSelected(),color));
+                canvas.setOnMouseDragged((MouseEvent e)-> System.out.println(""));
+                break;
+            case ERASER:
+                canvas.setOnMousePressed((MouseEvent e)-> application.deleteDrawCommand(e.getX(),e.getY()));
+                canvas.setOnMouseDragged((MouseEvent e)-> application.deleteDrawCommand(e.getX(),e.getY()));
+                break;
+        }
     }
 
     private void setCanvasListener(int tool){
@@ -228,19 +240,20 @@ public class Main extends Application implements Observer {
     }
 
     private void setChoiceBoxListeners(int tool){
-        shapeChoices.getSelectionModel().selectedIndexProperty().addListener((observableValue, number, number2) ->
-                    updateShapeCanvasListener((int)number2,colorChoices.getSelectionModel().getSelectedIndex(),sizeChoices.getSelectionModel().getSelectedIndex())
-                );
+            shapeChoices.getSelectionModel().selectedIndexProperty().addListener((observableValue, number, number2) ->
+                    updateShapeCanvasListener((int) number2, colorChoices.getSelectionModel().getSelectedIndex(),
+                            sizeChoices.getSelectionModel().getSelectedIndex(),tool)
+            );
 
-        colorChoices.getSelectionModel().selectedIndexProperty().addListener((observableValue, number, number2) ->
+            colorChoices.getSelectionModel().selectedIndexProperty().addListener((observableValue, number, number2) ->
                     updateShapeCanvasListener(shapeChoices.getSelectionModel().getSelectedIndex(),
-                            (int)number2,sizeChoices.getSelectionModel().getSelectedIndex())
-                );
+                            (int) number2, sizeChoices.getSelectionModel().getSelectedIndex(),tool)
+            );
 
-        sizeChoices.getSelectionModel().selectedIndexProperty().addListener((observableValue, number, number2) ->
+            sizeChoices.getSelectionModel().selectedIndexProperty().addListener((observableValue, number, number2) ->
                     updateShapeCanvasListener(shapeChoices.getSelectionModel().getSelectedIndex(),
-                            colorChoices.getSelectionModel().getSelectedIndex(),(int)number2)
-                 );
+                            colorChoices.getSelectionModel().getSelectedIndex(), (int) number2,tool)
+            );
     }
 
     private void initializeChoices(BorderPane node, int whichChoiceBox, String target, String[] strings){
