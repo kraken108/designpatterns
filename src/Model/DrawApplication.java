@@ -1,10 +1,7 @@
 package Model;
 
 
-import Model.Commands.Command;
-import Model.Commands.CommandFactory;
-import Model.Commands.DeleteDrawCommand;
-import Model.Commands.DrawCommand;
+import Model.Commands.*;
 import Model.Factory.FactoryProducer;
 import Model.FileHandler.Document;
 import Model.FileHandler.DrawDocument;
@@ -22,6 +19,7 @@ public class DrawApplication extends Application {
 
     private DrawCommand drawCommand = new DrawCommand();
     private DeleteDrawCommand deleteDrawCommand = new DeleteDrawCommand();
+    private EditDrawCommand editDrawCommand = new EditDrawCommand();
 
     public List<Map> getShapes(){
         List<Map> shapes = new ArrayList<>();
@@ -52,7 +50,7 @@ public class DrawApplication extends Application {
     }
 
     public void editDrawCommand(double x, double y,String shape,int size, boolean fill,String color){
-        drawCommand.editDrawCommand(x,y,shape,size,fill,color);
+        editDrawCommand.editDrawCommand(x,y,shape,size,fill,color);
     }
 
     public void deleteDrawCommand(double x, double y){
@@ -62,6 +60,8 @@ public class DrawApplication extends Application {
     public DrawApplication(Observer o) {
         super.commands.addObserver(o);
         drawCommand.addObserver(o);
+        deleteDrawCommand.addObserver(o);
+        editDrawCommand.addObserver(o);
     }
 
     @Override
