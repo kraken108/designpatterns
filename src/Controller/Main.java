@@ -1,28 +1,30 @@
 package Controller;
 
-import Model.Commands.DrawCommand;
+
 import Model.DrawApplication;
 
 
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -50,9 +52,11 @@ public class Main extends Application implements Observer {
     private DrawApplication application;
     private Button brush;
     private Button changer;
+    private Button eraser;
 
     private DrawController drawController;
 
+    private Stage primaryStage;
     @Override
     public void update(Observable observable, Object o) {
         Canvas c = canvas;
@@ -71,9 +75,10 @@ public class Main extends Application implements Observer {
 
     @Override
     public void start(Stage primaryStage) {
+        this.primaryStage = primaryStage;
+        application = new DrawApplication(this);
         getJavaFxElementReferences();
         initializeStage(primaryStage);
-        application = new DrawApplication(this);
         drawController = new DrawController();
     }
 
@@ -87,7 +92,55 @@ public class Main extends Application implements Observer {
         try{
             for(Node n : root.getChildrenUnmodifiable()) {
                 try{
-                    if (n.getId().equals("borderpane")) {
+                    if(n instanceof MenuBar){
+                        MenuBar menuBar = (MenuBar)n;
+                        for(Menu m : menuBar.getMenus()){
+                            if(m.getText().equals("File")){
+                                for(MenuItem mi : m.getItems()){
+                                    System.out.println("MENU ITEM:" + mi.getText());
+                                    if(mi.getText() != null){
+                                        if(mi.getText().equals("New")){
+                                            System.out.println("SETTING NEW ACTION");
+                                            mi.setOnAction(new EventHandler<ActionEvent>() {
+                                                @Override
+                                                public void handle(ActionEvent event) {
+                                                    application.clearApplication();
+                                                }
+                                            });
+                                        }else if(mi.getText().equals("Open…")){
+                                            System.out.println("SETTING OPEN ACTION");
+                                            mi.setOnAction(new EventHandler<ActionEvent>() {
+                                                @Override
+                                                public void handle(ActionEvent event) {
+                                                    FileChooser fileChooser = new FileChooser();
+                                                    fileChooser.setTitle("Open file");
+                                                    File file = fileChooser.showOpenDialog(primaryStage);
+                                                    if(file != null){
+                                                        application.openWorld(file.getAbsolutePath());
+                                                    }
+                                                }
+                                            });
+                                        }else if(mi.getText().equals("Save")){
+                                            System.out.println("SETTING SAVE ACTION");
+                                            mi.setOnAction(new EventHandler<ActionEvent>() {
+                                                @Override
+                                                public void handle(ActionEvent event) {
+                                                    FileChooser fileChooser = new FileChooser();
+                                                    fileChooser.setTitle("Save file");
+                                                    File file = fileChooser.showSaveDialog(primaryStage);
+                                                    if(file != null){
+                                                        application.saveWorld(file.getAbsolutePath());
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }
+
+                                }
+                            }
+                        }
+
+                    }else if (n.getId().equals("borderpane")) {
                         borderPane = (BorderPane) n;
                         for (Node nd : borderPane.getChildren()) {
                              if (nd.getId().equals("hbox")) {
@@ -99,7 +152,12 @@ public class Main extends Application implements Observer {
                                                 if (node.getId().equals("fillBox")) {
                                                     fillBox = (CheckBox) node;
                                                 } else if (node.getId().equals("shapes")) {
-                                                    String[] strings = {"Square", "Circle"};
+                                                    String[] strings =
+                                                            application.getAvailableShapes();
+                                                    System.out.println("LENGTH OF STRINGS: " + strings.length);
+                                                    //String[] strings = {"Square", "Circle"};
+
+                                                    //get shapes from application
                                                     initializeChoices((BorderPane) nod, SHAPES, "shapes", strings);
                                                 }
                                             } catch (NullPointerException e) {}
@@ -151,8 +209,8 @@ public class Main extends Application implements Observer {
                         setChoiceBoxListeners(CHANGER);
                     });
                 }else if(n.getId().equals("eraser")){
-                    changer = (Button) n;
-                    changer.setOnAction(e->{
+                    eraser = (Button) n;
+                    eraser.setOnAction(e->{
                         setCanvasListener(ERASER);
                         setChoiceBoxListeners(ERASER);
                     });
@@ -163,17 +221,28 @@ public class Main extends Application implements Observer {
         }
     }
 
-    private void updateShapeCanvasListener(int shapeVal, int colorVal, int sizeVal) {
+    private void updateShapeCanvasListener(int shapeVal, int colorVal, int sizeVal,int tool) {
         String shapeName = (String) shapeChoices.getItems().get(shapeVal);
         String color = (String) colorChoices.getItems().get(colorVal);
         int size = Integer.parseInt((String) sizeChoices.getItems().get(sizeVal));
-        System.out.println("shape: " + shapeName + " color: " + color + " size: " + size + " fillbox: " + fillBox.isSelected());
-        canvas.setOnMousePressed((MouseEvent event) ->
-
-                drawController.addDrawCommand(shapeName, event.getX(), event.getY(), size, size, fillBox.isSelected(), color,application));
-
-        canvas.setOnMouseDragged((MouseEvent event) ->
-                drawController.addDrawCommand(shapeName, event.getX(), event.getY(), size, size, fillBox.isSelected(), color,application));
+        switch (tool) {
+            case BRUSH:
+                canvas.setOnMousePressed((MouseEvent event) ->
+                        drawController.addDrawCommand(shapeName, event.getX(), event.getY(), size, size, fillBox.isSelected(), color,application));
+                canvas.setOnMouseDragged((MouseEvent event) ->
+                        drawController.addDrawCommand(shapeName, event.getX(), event.getY(), size, size, fillBox.isSelected(), color,application));
+                break;
+            case CHANGER:
+                System.out.println("changer");
+                canvas.setOnMousePressed((MouseEvent e)-> application.editDrawCommand(e.getX(),e.getY(),
+                        shapeName,size,fillBox.isSelected(),color));
+                canvas.setOnMouseDragged((MouseEvent e)-> System.out.println(""));
+                break;
+            case ERASER:
+                canvas.setOnMousePressed((MouseEvent e)-> application.deleteDrawCommand(e.getX(),e.getY()));
+                canvas.setOnMouseDragged((MouseEvent e)-> application.deleteDrawCommand(e.getX(),e.getY()));
+                break;
+        }
     }
 
     private void setCanvasListener(int tool){
@@ -228,19 +297,20 @@ public class Main extends Application implements Observer {
     }
 
     private void setChoiceBoxListeners(int tool){
-        shapeChoices.getSelectionModel().selectedIndexProperty().addListener((observableValue, number, number2) ->
-                    updateShapeCanvasListener((int)number2,colorChoices.getSelectionModel().getSelectedIndex(),sizeChoices.getSelectionModel().getSelectedIndex())
-                );
+            shapeChoices.getSelectionModel().selectedIndexProperty().addListener((observableValue, number, number2) ->
+                    updateShapeCanvasListener((int) number2, colorChoices.getSelectionModel().getSelectedIndex(),
+                            sizeChoices.getSelectionModel().getSelectedIndex(),tool)
+            );
 
-        colorChoices.getSelectionModel().selectedIndexProperty().addListener((observableValue, number, number2) ->
+            colorChoices.getSelectionModel().selectedIndexProperty().addListener((observableValue, number, number2) ->
                     updateShapeCanvasListener(shapeChoices.getSelectionModel().getSelectedIndex(),
-                            (int)number2,sizeChoices.getSelectionModel().getSelectedIndex())
-                );
+                            (int) number2, sizeChoices.getSelectionModel().getSelectedIndex(),tool)
+            );
 
-        sizeChoices.getSelectionModel().selectedIndexProperty().addListener((observableValue, number, number2) ->
+            sizeChoices.getSelectionModel().selectedIndexProperty().addListener((observableValue, number, number2) ->
                     updateShapeCanvasListener(shapeChoices.getSelectionModel().getSelectedIndex(),
-                            colorChoices.getSelectionModel().getSelectedIndex(),(int)number2)
-                 );
+                            colorChoices.getSelectionModel().getSelectedIndex(), (int) number2,tool)
+            );
     }
 
     private void initializeChoices(BorderPane node, int whichChoiceBox, String target, String[] strings){

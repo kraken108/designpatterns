@@ -21,6 +21,8 @@ public class Command extends Observable implements Cloneable{
     final public void clearCommands(){
         commandHistory.clear();
         undoneCommandHistory.clear();
+        setChanged();
+        notifyObservers(commandHistory);
     }
 
     final public void addCommand(Command c){
