@@ -188,7 +188,7 @@ public class Main extends Application implements Observer {
                 canvas.setOnMouseDragged((MouseEvent event) ->
                         drawController.addDrawCommand(shape, event.getX(), event.getY(), size, size, fillBox.isSelected(), color,application));
                 break;
-            case CHANGER:
+            case CHANGER:+-
                 System.out.println("changer");
                 canvas.setOnMousePressed((MouseEvent e)-> application.editDrawCommand(e.getX(),e.getY(),
                         shape,size,fillBox.isSelected(),color));
