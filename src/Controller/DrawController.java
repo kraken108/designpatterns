@@ -10,6 +10,12 @@ import java.util.Map;
 public class DrawController {
 
 
+    /**
+     * @param map parameters with information
+     * @param gc graphic context from canvas
+     *
+     * Draws on the graphicscontext
+     */
     public void draw(Map map,GraphicsContext gc) {
 
         try {

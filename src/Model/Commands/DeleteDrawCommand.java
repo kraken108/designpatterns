@@ -5,6 +5,9 @@ import Model.Factory.FactoryProducer;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * A class that deletes a drawcommand
+ */
 public class DeleteDrawCommand extends Command {
 
     private Command deletedCommand;
@@ -28,6 +31,12 @@ public class DeleteDrawCommand extends Command {
         deletedCommand = null;
     }
 
+    /**
+     * @param x Mouseclikc x
+     * @param y Mouse clikc Y
+     * Deletes a command by removing the draw command and placing a placeholder so that the index is
+     *  kept if you want to revert.
+     */
     public void deleteDrawCommand(double x,double y){
         try {
             int i = findFirstOccurance(x, y);

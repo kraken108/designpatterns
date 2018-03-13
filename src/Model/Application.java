@@ -47,7 +47,7 @@ abstract public class Application implements ApplicationI{
     }*/
 
     public void undoCommand(){
-        commands.undoCommand(INDEX_START);
+        commands.undoCommand();
     }
 
     public void redoCommand(){

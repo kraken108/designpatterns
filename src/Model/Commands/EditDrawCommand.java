@@ -7,6 +7,9 @@ import Model.Shapes.ShapeFactory;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * A class that edits a drawCommand
+ */
 public class EditDrawCommand extends Command {
     private Shape prevShape;
     private Shape newShape;
@@ -35,6 +38,16 @@ public class EditDrawCommand extends Command {
         index = 0;
     }
 
+    /**
+     * @param x Mouse clikc x
+     * @param y Mouse clikc y
+     * @param shape new shape
+     * @param size new size
+     * @param fill fill or no fill
+     * @param color new color
+     * Edits an existing drawcommand with the new attributes and saves the shpae incase you want tot revert.
+     *
+     */
     public void editDrawCommand(double x, double y,String shape,int size, boolean fill,String color){
         try {
             int dc = findFirstOccurance(x, y);

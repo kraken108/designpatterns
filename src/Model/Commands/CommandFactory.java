@@ -17,6 +17,12 @@ public class CommandFactory extends AbstractFactory{
         return null;
     }
 
+    /**
+     * @param command Input command
+     * @param params Input parameters
+     * @return Returns a command object.
+     * Creates commands based on input command and parameters.
+     */
     public Command createCommand(String command, Map params){
         command = command.toUpperCase();
             try{
