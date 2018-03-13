@@ -1,5 +1,10 @@
 package Model.Commands;
 
+import Model.Factory.FactoryProducer;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class DeleteDrawCommand extends Command {
 
     private Command deletedCommand;
@@ -29,9 +34,12 @@ public class DeleteDrawCommand extends Command {
             if(i==-1){
                 return;
             }
-            Command rCom = Command.getCommandHistory().get(i);
-            Command.getCommandHistory().set(i,new PlaceHolderCommand()); // remove
-            Command.getCommandHistory().addLast(new DeleteDrawCommand(rCom,i));
+            CommandFactory cmd = (CommandFactory)FactoryProducer.getInstance().createFactory("COMMAND");
+            Map<String,Object> params = new HashMap();
+            params.put("REMOVEDCOMMAND",Command.getCommandHistory().get(i));
+            params.put("INDEX",i);
+            Command.getCommandHistory().set(i,cmd.createCommand("PLACEHOLDER",null)); // remove
+            Command.getCommandHistory().addLast(cmd.createCommand("DELETE",params));
             setChanged();
             notifyObservers(commandHistory);
         }catch(IndexOutOfBoundsException e){

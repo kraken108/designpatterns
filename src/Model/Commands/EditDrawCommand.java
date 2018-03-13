@@ -1,7 +1,11 @@
 package Model.Commands;
 
+import Model.Factory.FactoryProducer;
 import Model.Shapes.Shape;
 import Model.Shapes.ShapeFactory;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class EditDrawCommand extends Command {
     private Shape prevShape;
@@ -35,9 +39,13 @@ public class EditDrawCommand extends Command {
         try {
             int dc = findFirstOccurance(x, y);
             Shape previousShape = ((DrawCommand) Command.getCommandHistory().get(dc)).getShape();
-            Shape tempShape = ShapeFactory.createShape(shape, previousShape.getX(), previousShape.getY(), size, size, fill, color);
-            ((DrawCommand) Command.getCommandHistory().get(dc)).setShape(tempShape);
-            Command.getCommandHistory().addLast( new EditDrawCommand(previousShape,dc,tempShape));
+            Shape newShape = ShapeFactory.createShape(shape, previousShape.getX(), previousShape.getY(), size, size, fill, color);
+            ((DrawCommand) Command.getCommandHistory().get(dc)).setShape(newShape);
+            Map<String,Object> params = new HashMap();
+            params.put("OLDSHAPE",previousShape);
+            params.put("INDEX",dc);
+            params.put("NEWSHAPE",newShape);
+            Command.getCommandHistory().addLast(FactoryProducer.getInstance().createFactory("COMMAND").createCommand("EDIT",params));
             setChanged();
             notifyObservers(commandHistory);
         }catch(IndexOutOfBoundsException e){
