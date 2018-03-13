@@ -1,6 +1,7 @@
 package Controller;
 
 
+import Model.ApplicationI;
 import Model.DrawApplication;
 
 
@@ -49,7 +50,7 @@ public class Main extends Application implements Observer {
     private HBox hbox;
     private Button undo;
     private Button redo;
-    private DrawApplication application;
+    private ApplicationI application;
     private Button brush;
     private Button changer;
     private Button eraser;
@@ -62,7 +63,7 @@ public class Main extends Application implements Observer {
         Canvas c = canvas;
         gc.clearRect(0, 0, c.getWidth(), c.getHeight());
 
-        List<Map> shapes = application.getShapes();
+        List<Map> shapes = ((DrawApplication)application).getShapes();
         for(Map map : shapes){
             Map<String,Object> m = map;
             drawController.draw(m,gc);
@@ -153,7 +154,7 @@ public class Main extends Application implements Observer {
                                                     fillBox = (CheckBox) node;
                                                 } else if (node.getId().equals("shapes")) {
                                                     String[] strings =
-                                                            application.getAvailableShapes();
+                                                            ((DrawApplication)application).getAvailableShapes();
                                                     System.out.println("LENGTH OF STRINGS: " + strings.length);
                                                     //String[] strings = {"Square", "Circle"};
 
@@ -228,19 +229,19 @@ public class Main extends Application implements Observer {
         switch (tool) {
             case BRUSH:
                 canvas.setOnMousePressed((MouseEvent event) ->
-                        drawController.addDrawCommand(shapeName, event.getX(), event.getY(), size, size, fillBox.isSelected(), color,application));
+                        drawController.addDrawCommand(shapeName, event.getX(), event.getY(), size, size, fillBox.isSelected(), color,((DrawApplication)application)));
                 canvas.setOnMouseDragged((MouseEvent event) ->
-                        drawController.addDrawCommand(shapeName, event.getX(), event.getY(), size, size, fillBox.isSelected(), color,application));
+                        drawController.addDrawCommand(shapeName, event.getX(), event.getY(), size, size, fillBox.isSelected(), color,((DrawApplication)application)));
                 break;
             case CHANGER:
                 System.out.println("changer");
-                canvas.setOnMousePressed((MouseEvent e)-> application.editDrawCommand(e.getX(),e.getY(),
+                canvas.setOnMousePressed((MouseEvent e)-> ((DrawApplication)application).editDrawCommand(e.getX(),e.getY(),
                         shapeName,size,fillBox.isSelected(),color));
                 canvas.setOnMouseDragged((MouseEvent e)-> System.out.println(""));
                 break;
             case ERASER:
-                canvas.setOnMousePressed((MouseEvent e)-> application.deleteDrawCommand(e.getX(),e.getY()));
-                canvas.setOnMouseDragged((MouseEvent e)-> application.deleteDrawCommand(e.getX(),e.getY()));
+                canvas.setOnMousePressed((MouseEvent e)-> ((DrawApplication)application).deleteDrawCommand(e.getX(),e.getY()));
+                canvas.setOnMouseDragged((MouseEvent e)-> ((DrawApplication)application).deleteDrawCommand(e.getX(),e.getY()));
                 break;
         }
     }
@@ -253,18 +254,18 @@ public class Main extends Application implements Observer {
         switch (tool) {
             case BRUSH:
                 canvas.setOnMousePressed((MouseEvent event) ->
-                        drawController.addDrawCommand(shape, event.getX(), event.getY(), size, size, fillBox.isSelected(), color,application));
+                        drawController.addDrawCommand(shape, event.getX(), event.getY(), size, size, fillBox.isSelected(), color,((DrawApplication)application)));
                 canvas.setOnMouseDragged((MouseEvent event) ->
-                        drawController.addDrawCommand(shape, event.getX(), event.getY(), size, size, fillBox.isSelected(), color,application));
+                        drawController.addDrawCommand(shape, event.getX(), event.getY(), size, size, fillBox.isSelected(), color,((DrawApplication)application)));
                 break;
             case CHANGER:
-                canvas.setOnMousePressed((MouseEvent e)-> application.editDrawCommand(e.getX(),e.getY(),
+                canvas.setOnMousePressed((MouseEvent e)-> ((DrawApplication)application).editDrawCommand(e.getX(),e.getY(),
                         shape,size,fillBox.isSelected(),color));
                 canvas.setOnMouseDragged((MouseEvent e)-> System.out.println(""));
                 break;
             case ERASER:
-                canvas.setOnMousePressed((MouseEvent e)-> application.deleteDrawCommand(e.getX(),e.getY()));
-                canvas.setOnMouseDragged((MouseEvent e)-> application.deleteDrawCommand(e.getX(),e.getY()));
+                canvas.setOnMousePressed((MouseEvent e)-> ((DrawApplication)application).deleteDrawCommand(e.getX(),e.getY()));
+                canvas.setOnMouseDragged((MouseEvent e)-> ((DrawApplication)application).deleteDrawCommand(e.getX(),e.getY()));
                 break;
         }
     }

@@ -1,12 +1,11 @@
 package Model;
 
 import Model.Commands.Command;
-import Model.Commands.DrawCommand;
 
 import java.util.List;
 import java.util.Map;
 
-abstract public class Application {
+abstract public class Application implements ApplicationI{
     private static int INDEX_START = 1;
     protected Command commands;
 
@@ -30,6 +29,7 @@ abstract public class Application {
         }
     }
 
+    /*
     @Override
     public String toString(){
         String s = "";
@@ -44,7 +44,7 @@ abstract public class Application {
             }
         }
         return s;
-    }
+    }*/
 
     public void undoCommand(){
         commands.undoCommand(INDEX_START);

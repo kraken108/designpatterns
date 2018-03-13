@@ -6,7 +6,6 @@ import Model.Factory.FactoryProducer;
 import Model.FileHandler.Document;
 import Model.FileHandler.DrawDocument;
 import Model.Shapes.Shape;
-import Model.Shapes.ShapeFactory;
 
 import java.io.FileNotFoundException;
 import java.util.*;
