@@ -17,19 +17,28 @@ public class CommandFactory extends AbstractFactory{
         return null;
     }
 
+    /**
+     * @param command Input command
+     * @param params Input parameters
+     * @return Returns a command object.
+     * Creates commands based on input command and parameters.
+     */
     public Command createCommand(String command, Map params){
         command = command.toUpperCase();
-        if(params.size() >= 2){
             try{
                 switch(command){
                     case "DRAW":
-                        Shape s = FactoryProducer.getInstance().createFactory("SHAPE").createShape((String)params.get("NAME"),(Map)params.get("ATTRIBUTES"));
-                        return new DrawCommand(s);
+                        if(params.size() >= 2){
+                            Shape s = FactoryProducer.getInstance().createFactory("SHAPE").createShape((String)params.get("NAME"),(Map)params.get("ATTRIBUTES"));
+                            return new DrawCommand(s);
+                        }
+                    case "EDIT": return new EditDrawCommand((Shape)params.get("OLDSHAPE"),(int)params.get("INDEX"),(Shape)params.get("NEWSHAPE"));
+                    case "DELETE": return new DeleteDrawCommand((Command)params.get("REMOVEDCOMMAND"),(int)params.get("INDEX"));
+                    case "PLACEHOLDER": return new PlaceHolderCommand();
                 }
             }catch(Exception e){
                 e.printStackTrace();
             }
-        }
         return null;
     }
 

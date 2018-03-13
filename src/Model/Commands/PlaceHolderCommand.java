@@ -1,7 +1,6 @@
 package Model.Commands;
 
-public class PlaceHolderCommand extends Command{
-
-    public PlaceHolderCommand() {
-    }
-}
+/**
+ * Just a placeholder for deletes.
+ */
+class PlaceHolderCommand extends Command{PlaceHolderCommand(){}}

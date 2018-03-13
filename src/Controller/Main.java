@@ -58,6 +58,12 @@ public class Main extends Application implements Observer {
     private DrawController drawController;
 
     private Stage primaryStage;
+
+    /**
+     * @param observable observable class
+     * @param o updated object
+     * Redraws canvas when commands gets updated
+     */
     @Override
     public void update(Observable observable, Object o) {
         Canvas c = canvas;
@@ -83,6 +89,9 @@ public class Main extends Application implements Observer {
         drawController = new DrawController();
     }
 
+    /**
+     * Gets all references from the scenebuilder XML file so that they can be references in the future.
+     */
     private void getJavaFxElementReferences(){
         try {
             root = FXMLLoader.load(getClass().getResource("../View/main.fxml"));
@@ -102,36 +111,25 @@ public class Main extends Application implements Observer {
                                     if(mi.getText() != null){
                                         if(mi.getText().equals("New")){
                                             System.out.println("SETTING NEW ACTION");
-                                            mi.setOnAction(new EventHandler<ActionEvent>() {
-                                                @Override
-                                                public void handle(ActionEvent event) {
-                                                    application.clearApplication();
-                                                }
-                                            });
+                                            mi.setOnAction(event -> application.clearApplication());
                                         }else if(mi.getText().equals("Open…")){
                                             System.out.println("SETTING OPEN ACTION");
-                                            mi.setOnAction(new EventHandler<ActionEvent>() {
-                                                @Override
-                                                public void handle(ActionEvent event) {
-                                                    FileChooser fileChooser = new FileChooser();
-                                                    fileChooser.setTitle("Open file");
-                                                    File file = fileChooser.showOpenDialog(primaryStage);
-                                                    if(file != null){
-                                                        application.openWorld(file.getAbsolutePath());
-                                                    }
+                                            mi.setOnAction(event -> {
+                                                FileChooser fileChooser = new FileChooser();
+                                                fileChooser.setTitle("Open file");
+                                                File file = fileChooser.showOpenDialog(primaryStage);
+                                                if(file != null){
+                                                    application.openWorld(file.getAbsolutePath());
                                                 }
                                             });
                                         }else if(mi.getText().equals("Save")){
                                             System.out.println("SETTING SAVE ACTION");
-                                            mi.setOnAction(new EventHandler<ActionEvent>() {
-                                                @Override
-                                                public void handle(ActionEvent event) {
-                                                    FileChooser fileChooser = new FileChooser();
-                                                    fileChooser.setTitle("Save file");
-                                                    File file = fileChooser.showSaveDialog(primaryStage);
-                                                    if(file != null){
-                                                        application.saveWorld(file.getAbsolutePath());
-                                                    }
+                                            mi.setOnAction(event -> {
+                                                FileChooser fileChooser = new FileChooser();
+                                                fileChooser.setTitle("Save file");
+                                                File file = fileChooser.showSaveDialog(primaryStage);
+                                                if(file != null){
+                                                    application.saveWorld(file.getAbsolutePath());
                                                 }
                                             });
                                         }
@@ -193,6 +191,10 @@ public class Main extends Application implements Observer {
         setChoiceBoxListeners(BRUSH);
     }
 
+    /**
+     * @param node borderpane that holds the node
+     * Initializes the tools and sets the corerct listeners
+     */
     private void initializeTools(BorderPane node){
         System.out.println("tools");
         for(Node n:node.getChildren()){
@@ -222,6 +224,13 @@ public class Main extends Application implements Observer {
         }
     }
 
+    /**
+     * @param shapeVal chosen shape
+     * @param colorVal chosen color
+     * @param sizeVal chosen size
+     * @param tool chosen tool
+     * Updates the canvaslistener depending on the input values
+     */
     private void updateShapeCanvasListener(int shapeVal, int colorVal, int sizeVal,int tool) {
         String shapeName = (String) shapeChoices.getItems().get(shapeVal);
         String color = (String) colorChoices.getItems().get(colorVal);
@@ -246,6 +255,10 @@ public class Main extends Application implements Observer {
         }
     }
 
+    /**
+     * @param tool what tool is chosen
+     * sets what how the canvas should react when being clicked
+     */
     private void setCanvasListener(int tool){
         String shape = (String) shapeChoices.getSelectionModel().getSelectedItem();
         String color = (String) colorChoices.getSelectionModel().getSelectedItem();
@@ -261,7 +274,8 @@ public class Main extends Application implements Observer {
             case CHANGER:
                 canvas.setOnMousePressed((MouseEvent e)-> ((DrawApplication)application).editDrawCommand(e.getX(),e.getY(),
                         shape,size,fillBox.isSelected(),color));
-                canvas.setOnMouseDragged((MouseEvent e)-> System.out.println(""));
+                canvas.setOnMouseDragged((MouseEvent e)-> ((DrawApplication)application).editDrawCommand(e.getX(),e.getY(),
+                        shape,size,fillBox.isSelected(),color));
                 break;
             case ERASER:
                 canvas.setOnMousePressed((MouseEvent e)-> ((DrawApplication)application).deleteDrawCommand(e.getX(),e.getY()));
@@ -270,6 +284,10 @@ public class Main extends Application implements Observer {
         }
     }
 
+    /**
+     * @param node borderpane that holds the buttons
+     * initialises undo and redo buttons and decides what t odo on aciton
+     */
     private void initializeUndoRedoButtons(BorderPane node){
         for(Node n:node.getChildren()){
             try{
@@ -286,6 +304,10 @@ public class Main extends Application implements Observer {
         }
     }
 
+    /**
+     * @param nd the canvas
+     * sets up the canvas
+     */
     private void initializeCanvas(Node nd){
         canvas = (Canvas) nd;
         canvas.setHeight(SCREEN_HEIGHT);
@@ -296,6 +318,10 @@ public class Main extends Application implements Observer {
         setCanvasListener(BRUSH);
     }
 
+    /**
+     * @param tool chosen tool
+     * sets the choiceboxlisteners
+     */
     private void setChoiceBoxListeners(int tool){
             shapeChoices.getSelectionModel().selectedIndexProperty().addListener((observableValue, number, number2) ->
                     updateShapeCanvasListener((int) number2, colorChoices.getSelectionModel().getSelectedIndex(),
@@ -313,6 +339,13 @@ public class Main extends Application implements Observer {
             );
     }
 
+    /**
+     * @param node borderpane that holds choicebox
+     * @param whichChoiceBox which choicebox is being initialized
+     * @param target target choicesbox
+     * @param strings strings to fill the coicesbox with
+     * Fills the choiceboxes with information and chooses 0
+     */
     private void initializeChoices(BorderPane node, int whichChoiceBox, String target, String[] strings){
         System.out.println(target);
         for(Node n:node.getChildren()) {
@@ -341,6 +374,10 @@ public class Main extends Application implements Observer {
         }
     }
 
+    /**
+     * @param primaryStage stage
+     * initilizes stage.
+     */
     private void initializeStage(Stage primaryStage){
         primaryStage.setTitle("Paint - Ultimate Edition");
         primaryStage.setScene(new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT));

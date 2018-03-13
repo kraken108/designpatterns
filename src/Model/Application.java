@@ -54,11 +54,10 @@ abstract public class Application implements ApplicationI {
         }
     }
 
-
     /**
      * Removes the latest command from history.
      */
-    public void undoCommand() {
+    public void undoCommand(){
         commands.undoCommand(INDEX_START);
     }
 
