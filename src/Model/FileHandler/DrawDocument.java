@@ -13,8 +13,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Extends document and implements its variations of methods required for Document to work.
+ */
 public class DrawDocument extends Document {
 
+    /**
+     * Loads a document into memory. Creates shapes from each row if it meets the requirements.
+     * @param rows A list of rows in the read document.
+     * @param world A reference to the application the document should be loaded into.
+     */
     @Override
     void loadDocument(ArrayList<String> rows, Application world) {
         try{
@@ -56,6 +64,11 @@ public class DrawDocument extends Document {
         }
     }
 
+    /**
+     * Reads data from the application and writes it to file.
+     * @param name Filename of the saved document.
+     * @param world The application where data should be saved from.
+     */
     @Override
     public void saveDocument(String name,Application world){
         PrintWriter writer = null;

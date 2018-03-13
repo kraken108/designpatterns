@@ -5,58 +5,81 @@ import Model.Commands.Command;
 import java.util.List;
 import java.util.Map;
 
-abstract public class Application implements ApplicationI{
+/**
+ * Application describes how a general application should work.
+ */
+abstract public class Application implements ApplicationI {
     private static int INDEX_START = 1;
     protected Command commands;
 
+    /**
+     * Get the history of commands of this application
+     *
+     * @return The command.
+     */
     public Command getCommands() {
         return commands;
     }
 
-    public Application(){
+    /**
+     * Constructor
+     */
+    public Application() {
         commands = new Command();
     }
 
-    public void clearApplication(){
+    /**
+     * Clears the history of all commands in this application.
+     */
+    public void clearApplication() {
         commands.clearCommands();
     }
 
+    /**
+     * Add a command to this application.
+     *
+     * @param command Name of command to be added.
+     * @param params  Attributes the command should possess.
+     */
     public abstract void addCommand(String command, Map params);
 
-    public void addCommand(Command c){
-        if(c != null){
+    /**
+     * Adds a command to this application.
+     *
+     * @param c The command to be added.
+     */
+    public void addCommand(Command c) {
+        if (c != null) {
             commands.addCommand(c);
         }
     }
 
-    /*
-    @Override
-    public String toString(){
-        String s = "";
-        for(Command c : Command.getCommandHistory()){
-            if(c instanceof DrawCommand){
-                s += ((DrawCommand) c).getShape().getWidth() + " "
-                        + ((DrawCommand) c).getShape().getHeight() + " "
-                        + ((DrawCommand) c).getShape().getX() + " "
-                        + ((DrawCommand) c).getShape().getY() + " "
-                        + ((DrawCommand) c).getShape().getIsFilled() + " "
-                        + ((DrawCommand) c).getShape().getColor();
-            }
-        }
-        return s;
-    }*/
 
-    public void undoCommand(){
+    /**
+     * Removes the latest command from history.
+     */
+    public void undoCommand() {
         commands.undoCommand(INDEX_START);
     }
 
-    public void redoCommand(){
+    /**
+     * Redo the latest undone command.
+     */
+    public void redoCommand() {
         commands.redoCommand();
     }
 
+    /**
+     * Saves the application to file.
+     * @param fileName The filename to write application data to.
+     */
     public abstract void saveWorld(String fileName);
 
-   public abstract void openWorld(String fileName);
+    /**
+     * Loads an application from file to the model.
+     * @param fileName The filename to read from.
+     */
+    public abstract void openWorld(String fileName);
 
 
 }
