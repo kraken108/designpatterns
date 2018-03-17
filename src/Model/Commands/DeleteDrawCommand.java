@@ -3,12 +3,14 @@ package Model.Commands;
 import Model.Factory.FactoryProducer;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Observable;
 
 /**
  * A class that deletes a drawcommand
  */
-public class DeleteDrawCommand extends Command {
+public class DeleteDrawCommand extends Observable implements Command {
 
     private Command deletedCommand;
     private int index;
@@ -45,10 +47,10 @@ public class DeleteDrawCommand extends Command {
             }
             CommandFactory cmd = (CommandFactory)FactoryProducer.getInstance().createFactory("COMMAND");
             Map<String,Object> params = new HashMap();
-            params.put("REMOVEDCOMMAND",Command.getCommandHistory().get(i));
+            params.put("REMOVEDCOMMAND",getCommandHistory().get(i));
             params.put("INDEX",i);
-            Command.getCommandHistory().set(i,cmd.createCommand("PLACEHOLDER",null)); // remove
-            Command.getCommandHistory().addLast(cmd.createCommand("DELETE",params));
+            getCommandHistory().set(i,cmd.createCommand("PLACEHOLDER",null)); // remove
+            getCommandHistory().addLast(cmd.createCommand("DELETE",params));
             setChanged();
             notifyObservers(commandHistory);
         }catch(IndexOutOfBoundsException e){
@@ -56,4 +58,18 @@ public class DeleteDrawCommand extends Command {
         }
     }
 
+    @Override
+    public void undoCommand() {
+
+    }
+
+    @Override
+    public void redoCommand() {
+
+    }
+
+    @Override
+    public void performCommand(LinkedList<Command> commands,Map<String, Object> params) {
+
+    }
 }

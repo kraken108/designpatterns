@@ -27,13 +27,114 @@ public class DrawApplication extends Application {
     private DeleteDrawCommand deleteDrawCommand = new DeleteDrawCommand();
     private EditDrawCommand editDrawCommand = new EditDrawCommand();
 
+    private LinkedList<Command> commandHistory = new LinkedList<>();
+
+    private LinkedList<Command> undoneCommandHistory = new LinkedList<>();
+
+    public  LinkedList<Command> getUndoneCommandHistory() {
+        return undoneCommandHistory;
+    }
+
+    public  LinkedList<Command> getCommandHistory() {
+        return commandHistory;
+    }
+    /**
+     * Clears all the commands in both commandhistory and undonecommandhistory
+     * and notifies the observes.
+     */
+    final public void clearCommands(){
+        commandHistory.clear();
+        undoneCommandHistory.clear();
+    }
+    /**
+     * Undoes a command by removing it from the commandhistory list
+     * and saves that command to the undone command list so that you can redo it.
+     * Notifies observer.
+     */
+    public void undoCommand(){
+        try {
+            Command temp = commandHistory.get(commandHistory.size()-1);
+            undoneCommandHistory.addLast((Command) commandHistory.getLast());
+            commandHistory.removeLast();
+            /*if(temp instanceof DeleteDrawCommand){
+                commandHistory.set(((DeleteDrawCommand) temp).getIndex(),
+                        (DrawCommand)((DeleteDrawCommand) temp).getDeletedCommand());
+            }else if(temp instanceof EditDrawCommand){
+                commandHistory.set(((EditDrawCommand) temp).getIndex(),new DrawCommand(((EditDrawCommand) temp).getPrevShape()));
+            }
+            setChanged();
+            notifyObservers(commandHistory);*/
+        } catch (IndexOutOfBoundsException|NoSuchElementException  e) {
+            System.out.println("Bad action.");
+        }
+    }
+
+    /**
+     * Redos command by taking them from undoneCommandHistory and putting them in
+     * commandhistory at their correct index again.
+     */
+    public void redoCommand() {
+        try {
+            System.out.println(":)))))"+undoneCommandHistory.size());
+            Command temp = undoneCommandHistory.getLast();
+            undoneCommandHistory.removeLast(); //remove
+           /* if(temp instanceof DeleteDrawCommand){
+                System.out.println("del");
+                //commandHistory.set(((DeleteDrawCommand) temp).getIndex(),new PlaceHolderCommand()); //remove
+                commandHistory.removeLast();
+            }else if (temp instanceof EditDrawCommand){
+                System.out.println("edit");
+                ((DrawCommand)commandHistory.get(((EditDrawCommand) temp).getIndex())).setShape(((EditDrawCommand) temp).getNewShape());
+            }
+            else {
+                addCommand(temp);
+            }
+            setChanged();
+            notifyObservers(commandHistory);*/
+        } catch (NoSuchElementException e) {
+            System.out.println("Cant redo more");
+        }
+    }
+    /**
+     * @param c the iinput command
+     * Adds a command to the commandhistory list and then ontifies observers.
+     */
+    final public void addCommand(Command c){
+        commandHistory.addLast(c);
+    }
+
+
+
+    /**
+     * @param x mouseclick X
+     * @param y mouseclick Y
+     * @returns the integer for the first found object
+     * Find the first occurance of an object in the commandhistory list.
+     */
+    final protected int findFirstOccurance(double x,double y){
+        Shape testShape;
+        int i  = 0;
+        for(Command c: reverseCommandList((LinkedList<Command>) getCommandHistory())){
+            if(c instanceof DrawCommand) {
+                testShape = ((DrawCommand) c).getShape();
+                if (x >= testShape.getX() && x <= testShape.getX() + testShape.getWidth()) {
+                    if (y >= testShape.getY() && y <= testShape.getY() + testShape.getHeight()) {
+                        return i;
+                    }
+                }
+            }
+            i++;
+        }
+        return -1;
+    }
+
     /**
      * Get a Map representation of all shapes stored in the model.
      * @return
      */
     public List<Map> getShapes(){
         List<Map> shapes = new ArrayList<>();
-        for(Command c : Command.getCommandHistory()){
+        for(Command c : getCommandHistory()){
             if(c instanceof DrawCommand){
                 Shape s = ((DrawCommand) c).getShape();
                 Map<String,Object> map = new HashMap<>();
@@ -127,7 +228,17 @@ public class DrawApplication extends Application {
             e.printStackTrace();
         }
     }
-
+    /**
+     * @param list input list to reverse
+     * @return a reversed list
+     * Returns a reversed list so that you can take the element on top on the canvas
+     */
+    private LinkedList<Command> reverseCommandList(LinkedList<Command> list){
+        LinkedList<Command> rList = new LinkedList<>();
+        while(!list.isEmpty())
+            rList.addLast(list.pop());
+        return rList;
+    }
 
     /**
      * Generates a String representation of draw application.
@@ -136,7 +247,7 @@ public class DrawApplication extends Application {
     @Override
     public String toString(){
         String s = "";
-        for(Command c : Command.getCommandHistory()){
+        for(Command c : getCommandHistory()){
             if(c instanceof DrawCommand){
                 s += ((DrawCommand) c).getShape().getWidth() + " "
                         + ((DrawCommand) c).getShape().getHeight() + " "

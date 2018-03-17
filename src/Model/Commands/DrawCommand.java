@@ -4,7 +4,11 @@ package Model.Commands;
 import Model.Shapes.Shape;
 import Model.Shapes.ShapeFactory;
 
-public class DrawCommand extends Command {
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Observable;
+
+public class DrawCommand extends Observable implements Command {
     private Shape shape;
 
     public DrawCommand(Shape s){
@@ -25,8 +29,18 @@ public class DrawCommand extends Command {
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return new DrawCommand(this.shape);
+    public void undoCommand() {
+
+    }
+
+    @Override
+    public void redoCommand() {
+
+    }
+
+    @Override
+    public void performCommand(LinkedList<Command> commands, Map<String, Object> params) {
+
     }
 
 }

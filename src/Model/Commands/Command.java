@@ -3,6 +3,7 @@ package Model.Commands;
 import Model.Shapes.Shape;
 
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Observable;
 
@@ -11,124 +12,10 @@ import java.util.Observable;
  * so that the controller can update the view automatically when a change has occured.
  * Implements clonable for the design pattern prototype.
  */
-public class Command extends Observable implements Cloneable{
+public interface Command {
 
-    protected static LinkedList<Command> commandHistory = new LinkedList<>();
+    void undoCommand();
+    void redoCommand();
+    void performCommand(LinkedList<Command> commands, Map<String,Object> params);
 
-    protected static LinkedList<Command> undoneCommandHistory = new LinkedList<>();
-
-    public static LinkedList<Command> getUndoneCommandHistory() {
-        return undoneCommandHistory;
-    }
-
-    public static LinkedList<Command> getCommandHistory() {
-        return commandHistory;
-    }
-
-    /**
-     * Clears all the commands in both commandhistory and undonecommandhistory
-     * and notifies the observes.
-     */
-    final public void clearCommands(){
-        commandHistory.clear();
-        undoneCommandHistory.clear();
-        setChanged();
-        notifyObservers(commandHistory);
-    }
-
-    /**
-     * @param c the iinput command
-     * Adds a command to the commandhistory list and then ontifies observers.
-     */
-    final public void addCommand(Command c){
-        commandHistory.addLast(c);
-        setChanged();
-        notifyObservers(commandHistory);
-    }
-
-    /**
-     * @param x mouseclick X
-     * @param y mouseclick Y
-     * @returns the integer for the first found object
-     * Find the first occurance of an object in the commandhistory list.
-     */
-    final protected static int findFirstOccurance(double x,double y){
-        Shape testShape;
-        int i  = 0;
-        for(Command c: reverseCommandList((LinkedList<Command>) Command.getCommandHistory().clone())){
-            if(c instanceof DrawCommand) {
-                testShape = ((DrawCommand) c).getShape();
-                if (x >= testShape.getX() && x <= testShape.getX() + testShape.getWidth()) {
-                    if (y >= testShape.getY() && y <= testShape.getY() + testShape.getHeight()) {
-                        return i;
-                    }
-                }
-            }
-            i++;
-        }
-        return -1;
-    }
-
-    /**
-     * Undoes a command by removing it from the commandhistory list
-     * and saves that command to the undone command list so that you can redo it.
-     * Notifies observer.
-     */
-    final public void undoCommand(){
-        try {
-        Command temp = commandHistory.get(commandHistory.size()-1);
-            undoneCommandHistory.addLast((Command) commandHistory.getLast().clone());
-            commandHistory.removeLast();
-        if(temp instanceof DeleteDrawCommand){
-            commandHistory.set(((DeleteDrawCommand) temp).getIndex(),
-                    (DrawCommand)((DeleteDrawCommand) temp).getDeletedCommand());
-        }else if(temp instanceof EditDrawCommand){
-            commandHistory.set(((EditDrawCommand) temp).getIndex(),new DrawCommand(((EditDrawCommand) temp).getPrevShape()));
-        }
-        setChanged();
-        notifyObservers(commandHistory);
-        } catch (IndexOutOfBoundsException|NoSuchElementException |CloneNotSupportedException e) {
-            System.out.println("Bad action.");
-        }
-    }
-
-    /**
-     * Redos command by taking them from undoneCommandHistory and putting them in
-     * commandhistory at their correct index again.
-     */
-    final public void redoCommand() {
-        try {
-            System.out.println(":)))))"+undoneCommandHistory.size());
-            Command temp = undoneCommandHistory.getLast();
-            undoneCommandHistory.removeLast(); //remove
-            if(temp instanceof DeleteDrawCommand){
-                System.out.println("del");
-                //commandHistory.set(((DeleteDrawCommand) temp).getIndex(),new PlaceHolderCommand()); //remove
-                commandHistory.removeLast();
-            }else if (temp instanceof EditDrawCommand){
-                System.out.println("edit");
-                ((DrawCommand)commandHistory.get(((EditDrawCommand) temp).getIndex())).setShape(((EditDrawCommand) temp).getNewShape());
-            }
-            else {
-                addCommand(temp);
-            }
-            setChanged();
-            notifyObservers(commandHistory);
-        } catch (NoSuchElementException e) {
-            System.out.println("Cant redo more");
-        }
-    }
-
-
-    /**
-     * @param list input list to reverse
-     * @return a reversed list
-     * Returns a reversed list so that you can take the element on top on the canvas
-     */
-    private static LinkedList<Command> reverseCommandList(LinkedList<Command> list){
-        LinkedList<Command> rList = new LinkedList<>();
-        while(!list.isEmpty())
-            rList.addLast(list.pop());
-        return rList;
-    }
 }

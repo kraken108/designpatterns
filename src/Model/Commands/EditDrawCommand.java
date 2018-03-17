@@ -5,12 +5,14 @@ import Model.Shapes.Shape;
 import Model.Shapes.ShapeFactory;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Observable;
 
 /**
  * A class that edits a drawCommand
  */
-public class EditDrawCommand extends Command {
+public class EditDrawCommand extends Observable implements Command {
     private Shape prevShape;
     private Shape newShape;
     private int index;
@@ -53,7 +55,7 @@ public class EditDrawCommand extends Command {
             int dc = findFirstOccurance(x, y);
             Shape previousShape = ((DrawCommand) Command.getCommandHistory().get(dc)).getShape();
             Shape newShape = ShapeFactory.createShape(shape, previousShape.getX(), previousShape.getY(), size, size, fill, color);
-            ((DrawCommand) Command.getCommandHistory().get(dc)).setShape(newShape);
+            ((DrawCommand) getCommandHistory().get(dc)).setShape(newShape);
             Map<String,Object> params = new HashMap();
             params.put("OLDSHAPE",previousShape);
             params.put("INDEX",dc);
@@ -64,5 +66,20 @@ public class EditDrawCommand extends Command {
         }catch(IndexOutOfBoundsException e){
             System.out.println("no object found");
         }
+    }
+
+    @Override
+    public void undoCommand() {
+
+    }
+
+    @Override
+    public void redoCommand() {
+
+    }
+
+    @Override
+    public void performCommand(LinkedList<Command> commands,Map<String, Object> params) {
+
     }
 }
