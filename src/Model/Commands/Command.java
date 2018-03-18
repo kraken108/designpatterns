@@ -14,8 +14,8 @@ import java.util.Observable;
  */
 public interface Command {
 
-    void undoCommand();
-    void redoCommand();
-    void performCommand(LinkedList<Command> commands, Map<String,Object> params);
+    LinkedList<Command> undoCommand(LinkedList<Command> commands);
+    LinkedList<Command> redoCommand(LinkedList<Command> commands);
+    LinkedList<Command> performCommand(LinkedList<Command> commands, Map<String,Object> params);
 
 }

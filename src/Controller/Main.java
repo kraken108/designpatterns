@@ -5,7 +5,7 @@ import Model.ApplicationI;
 import Model.DrawApplication;
 
 
-
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -17,7 +17,9 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.input.DragEvent;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -235,24 +237,7 @@ public class Main extends Application implements Observer {
         String shapeName = (String) shapeChoices.getItems().get(shapeVal);
         String color = (String) colorChoices.getItems().get(colorVal);
         int size = Integer.parseInt((String) sizeChoices.getItems().get(sizeVal));
-        switch (tool) {
-            case BRUSH:
-                canvas.setOnMousePressed((MouseEvent event) ->
-                        drawController.addDrawCommand(shapeName, event.getX(), event.getY(), size, size, fillBox.isSelected(), color,((DrawApplication)application)));
-                canvas.setOnMouseDragged((MouseEvent event) ->
-                        drawController.addDrawCommand(shapeName, event.getX(), event.getY(), size, size, fillBox.isSelected(), color,((DrawApplication)application)));
-                break;
-            case CHANGER:
-                System.out.println("changer");
-                canvas.setOnMousePressed((MouseEvent e)-> ((DrawApplication)application).editDrawCommand(e.getX(),e.getY(),
-                        shapeName,size,fillBox.isSelected(),color));
-                canvas.setOnMouseDragged((MouseEvent e)-> System.out.println(""));
-                break;
-            case ERASER:
-                canvas.setOnMousePressed((MouseEvent e)-> ((DrawApplication)application).deleteDrawCommand(e.getX(),e.getY()));
-                canvas.setOnMouseDragged((MouseEvent e)-> ((DrawApplication)application).deleteDrawCommand(e.getX(),e.getY()));
-                break;
-        }
+        setTool(tool, shapeName, color, size);
     }
 
     /**
@@ -264,24 +249,44 @@ public class Main extends Application implements Observer {
         String color = (String) colorChoices.getSelectionModel().getSelectedItem();
         int size = Integer.parseInt((String) sizeChoices.getSelectionModel().getSelectedItem());
         System.out.println("shape: " + shape + " color: " + color + " size: " + size + " fillbox: " + fillBox.isSelected());
+        setTool(tool, shape, color, size);
+    }
+
+    private double enterDragX;
+    private double enterDragY;
+
+    private void setTool(int tool, String shape, String color, int size) {
         switch (tool) {
             case BRUSH:
-                canvas.setOnMousePressed((MouseEvent event) ->
+                canvas.setOnMouseReleased((MouseEvent event) ->
                         drawController.addDrawCommand(shape, event.getX(), event.getY(), size, size, fillBox.isSelected(), color,((DrawApplication)application)));
                 canvas.setOnMouseDragged((MouseEvent event) ->
                         drawController.addDrawCommand(shape, event.getX(), event.getY(), size, size, fillBox.isSelected(), color,((DrawApplication)application)));
+                canvas.setOnMouseReleased((MouseEvent e)-> System.out.print(""));
+                canvas.setOnMouseDragReleased(e -> System.out.print(""));
                 break;
             case CHANGER:
-                canvas.setOnMousePressed((MouseEvent e)-> ((DrawApplication)application).editDrawCommand(e.getX(),e.getY(),
-                        shape,size,fillBox.isSelected(),color));
-                canvas.setOnMouseDragged((MouseEvent e)-> ((DrawApplication)application).editDrawCommand(e.getX(),e.getY(),
-                        shape,size,fillBox.isSelected(),color));
+                System.out.println("changer");
+                canvas.setOnMouseReleased((MouseEvent e)-> drawController.addEditCommand(e.getX(),e.getY(),
+                        shape,size,fillBox.isSelected(),color,((DrawApplication)application)));
+                canvas.setOnMouseDragged((MouseEvent e)-> System.out.print(""));
+                canvas.setOnMouseReleased((MouseEvent e)-> drawController.addEditCommand(e.getX(),e.getY(),
+                        shape,size,fillBox.isSelected(),color,((DrawApplication)application)));
+                canvas.setOnMouseDragReleased(e ->
+                    drawController.addEditGroupCommand(enterDragX,enterDragY,e.getX(),e.getY(),shape,size,fillBox.isSelected(),color,(DrawApplication)application));
                 break;
             case ERASER:
-                canvas.setOnMousePressed((MouseEvent e)-> ((DrawApplication)application).deleteDrawCommand(e.getX(),e.getY()));
-                canvas.setOnMouseDragged((MouseEvent e)-> ((DrawApplication)application).deleteDrawCommand(e.getX(),e.getY()));
-                break;
+                canvas.setOnMouseDragged((MouseEvent e)-> System.out.print(""));
+                canvas.setOnMouseReleased((MouseEvent e)-> drawController.addDeleteCommand(e.getX(),e.getY(),(DrawApplication)application));
+                canvas.setOnMouseDragReleased(e -> {
+                    System.out.println("asdasada");
+                    drawController.addDeleteGroupCommand(enterDragX,enterDragY,e.getX(),e.getY(),(DrawApplication)application);});
         }
+        canvas.setOnMousePressed((MouseEvent e)->{
+            enterDragX=e.getX();
+            enterDragY=e.getY();
+        });
+        canvas.setOnDragDetected(event -> canvas.startFullDrag());
     }
 
     /**

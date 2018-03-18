@@ -1,5 +1,6 @@
 package Model.Commands;
 
+import Model.Application;
 import Model.Factory.FactoryProducer;
 import Model.Shapes.Shape;
 import Model.Shapes.ShapeFactory;
@@ -37,6 +38,7 @@ public class EditDrawCommand extends Observable implements Command {
 
     public EditDrawCommand(){
         prevShape = null;
+        newShape = null;
         index = 0;
     }
 
@@ -51,7 +53,7 @@ public class EditDrawCommand extends Observable implements Command {
      *
      */
     public void editDrawCommand(double x, double y,String shape,int size, boolean fill,String color){
-        try {
+        /*try {
             int dc = findFirstOccurance(x, y);
             Shape previousShape = ((DrawCommand) Command.getCommandHistory().get(dc)).getShape();
             Shape newShape = ShapeFactory.createShape(shape, previousShape.getX(), previousShape.getY(), size, size, fill, color);
@@ -65,21 +67,40 @@ public class EditDrawCommand extends Observable implements Command {
             notifyObservers(commandHistory);
         }catch(IndexOutOfBoundsException e){
             System.out.println("no object found");
+        }*/
+    }
+
+    @Override
+    public LinkedList<Command> undoCommand(LinkedList<Command> commands) {
+        commands.set(this.getIndex(),new DrawCommand(this.getPrevShape()));
+        return commands;
+    }
+
+    @Override
+    public LinkedList<Command> redoCommand(LinkedList<Command> commands) {
+        ((DrawCommand)commands.get(this.getIndex())).setShape(this.getNewShape());
+        return commands;
+    }
+
+    @Override
+    public LinkedList<Command> performCommand(LinkedList<Command> commands,Map<String, Object> params) {
+        try {
+            int dc = Application.findFirstOccurance((double)params.get("X"),(double) params.get("Y"));
+            if(dc==-1){
+                return commands;
+            }
+            Shape previousShape = ((DrawCommand) commands.get(dc)).getShape();
+            Shape newShape = ShapeFactory.createShape((String)params.get("SHAPE"), previousShape.getX(), previousShape.getY(), (int) params.get("SIZE"),(int) params.get("SIZE"),(boolean) params.get("FILL"),(String) params.get("COLOR"));
+            ((DrawCommand) commands.get(dc)).setShape(newShape);
+            Map<String,Object> eParams = new HashMap();
+            eParams.put("OLDSHAPE",previousShape);
+            eParams.put("INDEX",dc);
+            eParams.put("NEWSHAPE",newShape);
+            commands.addLast(FactoryProducer.getInstance().createFactory("COMMAND").createCommand("EDIT",eParams));
+        }catch(IndexOutOfBoundsException e){
+            e.printStackTrace();
+            System.out.println("no object found");
         }
-    }
-
-    @Override
-    public void undoCommand() {
-
-    }
-
-    @Override
-    public void redoCommand() {
-
-    }
-
-    @Override
-    public void performCommand(LinkedList<Command> commands,Map<String, Object> params) {
-
+        return commands;
     }
 }

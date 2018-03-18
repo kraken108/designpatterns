@@ -28,19 +28,22 @@ public class DrawCommand extends Observable implements Command {
         shape = newShape;
     }
 
-    @Override
-    public void undoCommand() {
 
+    @Override
+    public LinkedList<Command> undoCommand(LinkedList<Command> commands) {
+        return commands;
     }
 
     @Override
-    public void redoCommand() {
-
+    public LinkedList<Command> redoCommand(LinkedList<Command> commands) {
+        return commands;
     }
 
     @Override
-    public void performCommand(LinkedList<Command> commands, Map<String, Object> params) {
-
+    public LinkedList<Command> performCommand(LinkedList<Command> commands, Map<String, Object> params) {
+        commands.addLast(this);
+        return commands;
     }
+
 
 }

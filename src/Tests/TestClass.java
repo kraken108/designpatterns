@@ -3,10 +3,7 @@ package Tests;
 import Model.Application;
 import Model.DrawApplication;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class TestClass {
 
@@ -46,4 +43,6 @@ public class TestClass {
         System.out.println("Current items:");
         System.out.println(app.toString());
     }
+
+
 }

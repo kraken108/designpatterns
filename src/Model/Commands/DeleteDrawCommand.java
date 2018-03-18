@@ -1,5 +1,6 @@
 package Model.Commands;
 
+import Model.Application;
 import Model.Factory.FactoryProducer;
 
 import java.util.HashMap;
@@ -33,43 +34,38 @@ public class DeleteDrawCommand extends Observable implements Command {
         deletedCommand = null;
     }
 
-    /**
-     * @param x Mouseclikc x
-     * @param y Mouse clikc Y
-     * Deletes a command by removing the draw command and placing a placeholder so that the index is
-     *  kept if you want to revert.
-     */
-    public void deleteDrawCommand(double x,double y){
+
+    @Override
+    public LinkedList<Command> undoCommand(LinkedList<Command> commands) {
+        commands.set(this.getIndex(),
+                (DrawCommand)this.getDeletedCommand());
+        return commands;
+    }
+
+    @Override
+    public LinkedList<Command> redoCommand(LinkedList<Command> commands) {
+        commands.removeLast();
+        return commands;
+    }
+
+    @Override
+    public LinkedList<Command> performCommand(LinkedList<Command> commands,Map<String, Object> params) {
         try {
-            int i = findFirstOccurance(x, y);
+            int i = Application.findFirstOccurance((double)params.get("X"),(double) params.get("Y"));
             if(i==-1){
-                return;
+                System.out.println("nofindy");
+                return commands;
             }
             CommandFactory cmd = (CommandFactory)FactoryProducer.getInstance().createFactory("COMMAND");
-            Map<String,Object> params = new HashMap();
-            params.put("REMOVEDCOMMAND",getCommandHistory().get(i));
-            params.put("INDEX",i);
-            getCommandHistory().set(i,cmd.createCommand("PLACEHOLDER",null)); // remove
-            getCommandHistory().addLast(cmd.createCommand("DELETE",params));
-            setChanged();
-            notifyObservers(commandHistory);
+            Map<String,Object> rParams = new HashMap();
+            rParams.put("REMOVEDCOMMAND",commands.get(i));
+            rParams.put("INDEX",i);
+            commands.set(i,new PlaceHolderCommands()); // remove
+            commands.addLast(cmd.createCommand("DELETE",rParams));
         }catch(IndexOutOfBoundsException e){
+            e.printStackTrace();
             System.out.println("no object found");
         }
-    }
-
-    @Override
-    public void undoCommand() {
-
-    }
-
-    @Override
-    public void redoCommand() {
-
-    }
-
-    @Override
-    public void performCommand(LinkedList<Command> commands,Map<String, Object> params) {
-
+     return commands;
     }
 }

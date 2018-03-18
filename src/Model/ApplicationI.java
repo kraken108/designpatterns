@@ -24,7 +24,7 @@ public interface ApplicationI {
      * @param name Name of command object.
      * @param params Attributes of the command.
      */
-    public void addCommand(String name, Map params);
+    public void addCommand(String name, Map<String,Object> params);
 
     /**
      * Undo a command from command history.

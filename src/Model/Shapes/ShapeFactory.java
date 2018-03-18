@@ -21,7 +21,6 @@ public class ShapeFactory extends AbstractFactory{
         try{
             switch(name){
                 case "CIRCLE":
-                    System.out.println("Creating circle");
                     if(params.size() >= 6){
                         return new Circle(
                                 (double)params.get("X"),
@@ -33,7 +32,6 @@ public class ShapeFactory extends AbstractFactory{
                         );
                     }
                 case "SQUARE":
-                    System.out.println("Creating square");
                     if(params.size() >= 6){
                         return new Square(
                                 (double)params.get("X"),

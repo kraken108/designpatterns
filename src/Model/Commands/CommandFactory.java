@@ -1,12 +1,11 @@
 package Model.Commands;
 
 
+import Model.Application;
 import Model.Factory.AbstractFactory;
 import Model.Factory.FactoryProducer;
 import Model.Shapes.Shape;
-import Model.Shapes.ShapeFactory;
 
-import java.util.List;
 import java.util.Map;
 
 public class CommandFactory extends AbstractFactory{
@@ -32,9 +31,14 @@ public class CommandFactory extends AbstractFactory{
                             Shape s = FactoryProducer.getInstance().createFactory("SHAPE").createShape((String)params.get("NAME"),(Map)params.get("ATTRIBUTES"));
                             return new DrawCommand(s);
                         }
-                    case "EDIT": return new EditDrawCommand((Shape)params.get("OLDSHAPE"),(int)params.get("INDEX"),(Shape)params.get("NEWSHAPE"));
+                    case "EDIT": return new EditDrawCommand((Shape)params.get("OLDSHAPE"),
+                            (int)params.get("INDEX"),
+                            (Shape)params.get("NEWSHAPE"));
                     case "DELETE": return new DeleteDrawCommand((Command)params.get("REMOVEDCOMMAND"),(int)params.get("INDEX"));
-                    case "PLACEHOLDER": return new PlaceHolderCommand();
+                    case "DELETEGROUP": return new DeleteGroup();
+                    case "EDITGROUP": return new EditGroup();
+                    case "TEMPDELETE": return new DeleteDrawCommand();
+                    case "TEMPEDIT": return new EditDrawCommand();
                 }
             }catch(Exception e){
                 e.printStackTrace();

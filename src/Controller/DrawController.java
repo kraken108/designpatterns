@@ -1,7 +1,9 @@
 package Controller;
 
 import Model.Application;
+import Model.DrawApplication;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
 import java.util.HashMap;
@@ -86,4 +88,45 @@ public class DrawController {
 
         application.addCommand("DRAW", commandMap);
     }
+
+    public void addDeleteCommand(double x,double y,Application application){
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("X", x);
+        paramMap.put("Y", y);
+        application.addCommand("TEMPDELETE",paramMap);
+    }
+    public void addEditCommand(double x, double y, String shapeName, int size, boolean fill, String color, Application application){
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("X", x);
+        paramMap.put("Y", y);
+        paramMap.put("SHAPE", shapeName);
+        paramMap.put("SIZE", size);
+        paramMap.put("FILL", fill);
+        paramMap.put("COLOR",color);
+        application.addCommand("TEMPEDIT",paramMap);
+    }
+
+    public void addDeleteGroupCommand(double xBegin, double yBegin,double xEnd, double yEnd, Application application){
+        System.out.println("xb: "+xBegin+" xe: "+xEnd+" yb: "+yBegin+" ye: "+yEnd);
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("XBEGIN", xBegin);
+        paramMap.put("YBEGIN", yBegin);
+        paramMap.put("XEND", xEnd);
+        paramMap.put("YEND", yEnd);
+        application.addCommand("DELETEGROUP",paramMap);
+    }
+
+    public void addEditGroupCommand(double xBegin, double yBegin,double xEnd, double yEnd,String shapeName, int size, boolean fill, String color, Application application){
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("XBEGIN", xBegin);
+        paramMap.put("YBEGIN", yBegin);
+        paramMap.put("XEND", xEnd);
+        paramMap.put("YEND", yEnd);
+        paramMap.put("SHAPE", shapeName);
+        paramMap.put("SIZE", size);
+        paramMap.put("FILL", fill);
+        paramMap.put("COLOR",color);
+        application.addCommand("EDITGROUP",paramMap);
+    }
+
 }

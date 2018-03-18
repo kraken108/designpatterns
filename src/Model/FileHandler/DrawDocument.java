@@ -53,7 +53,7 @@ public class DrawDocument extends Document {
                     System.out.println("shaperino");
                     if (shape != null) {
                         System.out.println("ADDING COMMAND from FILE");
-                        world.addCommand(new DrawCommand(shape));
+                        world.addCommand("DRAW",null); //TODO: glöm inte
                     }
                 } else {
                     System.out.println("Failed to read read row, less than 5 elements");
@@ -74,7 +74,7 @@ public class DrawDocument extends Document {
         PrintWriter writer = null;
         try {
             writer = new PrintWriter(name);
-            for(Command c : world.getCommands().getCommandHistory()){
+            for(Command c : world.getCommandHistory()){
                 if(c instanceof DrawCommand){
                     Shape s = ((DrawCommand) c).getShape();
                     StringBuilder sb = new StringBuilder();
