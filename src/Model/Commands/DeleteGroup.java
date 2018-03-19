@@ -29,9 +29,10 @@ public class DeleteGroup implements Command {
 
     @Override
     public LinkedList<Command> redoCommand(LinkedList<Command> commands) {
-        /*for(DeleteDrawCommand c:groupCommands){
+        for(DeleteDrawCommand c:groupCommands){
             commands.set(c.getIndex(),this);
-        }*/
+        }
+        commands.addLast(this);
         return commands;
     }
 
@@ -44,13 +45,8 @@ public class DeleteGroup implements Command {
         for(Command c: commands){
             if(c instanceof DrawCommand) {
                 testShape = ((DrawCommand) c).getShape();
-                System.out.println(((double)params.get("XBEGIN"))+" a "+testShape.getX());
-                if (((double)params.get("XBEGIN")) >= testShape.getX() && ((double)params.get("XEND")) <= testShape.getX()+ testShape.getWidth()) {
-                    System.out.println("kukenY "+((double)params.get("YBEGIN"))+" aa "+testShape.getY());
-                    if (((double)params.get("YBEGIN")) >= testShape.getY() && ((double)params.get("YEND")) <= testShape.getY()+ testShape.getHeight()) {
-                        System.out.println("monkaS");
-                        System.out.println("monkaS");
-                        System.out.println("monkaS");
+                if (((double)params.get("XBEGIN")) <= testShape.getX() && (testShape.getX()<=((double)params.get("XEND")))) {
+                    if (((double)params.get("YBEGIN")) <= testShape.getY() && testShape.getY() <= ((double)params.get("YEND"))) {
                         Map<String,Object> nParams = new HashMap<>();
                         nParams.put("INDEX",i);
                         nParams.put("REMOVEDCOMMAND",c);

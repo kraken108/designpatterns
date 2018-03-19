@@ -262,8 +262,6 @@ public class Main extends Application implements Observer {
                         drawController.addDrawCommand(shape, event.getX(), event.getY(), size, size, fillBox.isSelected(), color,((DrawApplication)application)));
                 canvas.setOnMouseDragged((MouseEvent event) ->
                         drawController.addDrawCommand(shape, event.getX(), event.getY(), size, size, fillBox.isSelected(), color,((DrawApplication)application)));
-                canvas.setOnMouseReleased((MouseEvent e)-> System.out.print(""));
-                canvas.setOnMouseDragReleased(e -> System.out.print(""));
                 break;
             case CHANGER:
                 System.out.println("changer");
@@ -278,9 +276,7 @@ public class Main extends Application implements Observer {
             case ERASER:
                 canvas.setOnMouseDragged((MouseEvent e)-> System.out.print(""));
                 canvas.setOnMouseReleased((MouseEvent e)-> drawController.addDeleteCommand(e.getX(),e.getY(),(DrawApplication)application));
-                canvas.setOnMouseDragReleased(e -> {
-                    System.out.println("asdasada");
-                    drawController.addDeleteGroupCommand(enterDragX,enterDragY,e.getX(),e.getY(),(DrawApplication)application);});
+                canvas.setOnMouseDragReleased(e -> drawController.addDeleteGroupCommand(enterDragX,enterDragY,e.getX(),e.getY(),(DrawApplication)application));
         }
         canvas.setOnMousePressed((MouseEvent e)->{
             enterDragX=e.getX();

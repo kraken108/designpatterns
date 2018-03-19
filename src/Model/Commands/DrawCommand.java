@@ -36,6 +36,7 @@ public class DrawCommand extends Observable implements Command {
 
     @Override
     public LinkedList<Command> redoCommand(LinkedList<Command> commands) {
+        commands.addLast(this);
         return commands;
     }
 

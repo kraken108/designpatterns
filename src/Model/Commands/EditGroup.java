@@ -29,6 +29,10 @@ public class EditGroup implements Command {
 
     @Override
     public LinkedList<Command> redoCommand(LinkedList<Command> commands) {
+        for(EditDrawCommand c:groupCommands){
+            commands.set(c.getIndex(),new DrawCommand(c.getNewShape()));
+        }
+        commands.addLast(this);
         return commands;
     }
 
@@ -41,10 +45,8 @@ public class EditGroup implements Command {
         for(Command c: commands){
             if(c instanceof DrawCommand) {
                 testShape = ((DrawCommand) c).getShape();
-                System.out.println(((double)params.get("XBEGIN"))+" a "+testShape.getX());
-                if (((double)params.get("XBEGIN")) >= testShape.getX() && ((double)params.get("XEND")) <= testShape.getX()+ testShape.getWidth()) {
-                    System.out.println("kukenY "+((double)params.get("YBEGIN"))+" aa "+testShape.getY());
-                    if (((double)params.get("YBEGIN")) >= testShape.getY() && ((double)params.get("YEND")) <= testShape.getY()+ testShape.getHeight()) {
+                if (((double)params.get("XBEGIN")) <= testShape.getX() && (testShape.getX()<=((double)params.get("XEND")))) {
+                    if (((double)params.get("YBEGIN")) <= testShape.getY() && testShape.getY() <= ((double)params.get("YEND"))) {
                         Shape newShape = ShapeFactory.createShape((String)params.get("SHAPE"), testShape.getX(), testShape.getY(), (int) params.get("SIZE"),(int) params.get("SIZE"),(boolean) params.get("FILL"),(String) params.get("COLOR"));
                         ((DrawCommand) c).setShape(newShape);
                         Map<String,Object> eParams = new HashMap();

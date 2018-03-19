@@ -44,7 +44,8 @@ public class DeleteDrawCommand extends Observable implements Command {
 
     @Override
     public LinkedList<Command> redoCommand(LinkedList<Command> commands) {
-        commands.removeLast();
+        commands.set(this.getIndex(),
+                new PlaceHolderCommands());
         return commands;
     }
 
